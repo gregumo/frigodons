@@ -71,6 +71,8 @@ services:
       MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
       MERCURE_EXTRA_DIRECTIVES: |
         cors_origins http://127.0.0.1:8000
+    ports:
+      - 61110:80
     # Comment the following line to disable the development mode
     command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
     volumes:
