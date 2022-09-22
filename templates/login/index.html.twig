@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LoginController!{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto mt-10 px-5">
+        <h1 class="text-2xl md:text-4xl">Connexion</h1>
+        <p>Pour accéder au planning des bénévoles, entrez simplement votre adresse e-mail.</p>
+        <p>Si votre adresse n'est pas reconnue, merci de nous contacter à l'adresse <b>lacordee44@protonmail.com</b></p>
+
+        <div class="mt-10">
+            {% if error %}
+                <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form action="{{ path('app_login') }}" method="post">
+                <label for="username" class="font-bold">Adresse e-mail</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" class="px-3 py-2 mx-2 bg-white border focus:outline-none rounded-md sm:text-sm"/>
+                <input class="hidden" type="password" id="password" name="_password" value="bypass"/>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="py-2 px-3 bg-purple hover:bg-purple-600 text-white text-sm font-semibold rounded-md focus:outline-none">Connexion</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
