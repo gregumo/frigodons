@@ -6,6 +6,18 @@ export default class Helper {
                 window.helper.phoneNumberFormatter(e);
             });
         }
+
+        let icons = document.querySelectorAll('div[data-tooltip-target]')
+        if (icons) {
+            icons.forEach((item) => {
+                item.addEventListener('mouseenter', (e) => {
+                    window.helper.showTooltip(e.target);
+                });
+                item.addEventListener('mouseleave', (e) => {
+                    window.helper.hideTooltip(e.target);
+                });
+            })
+        }
     }
 
     phoneNumberFormatter(e) {
@@ -29,5 +41,17 @@ export default class Helper {
         }
 
         phoneInput.value = refacto;
+    }
+
+    showTooltip(icon) {
+        let tooltip = document.getElementById(icon.getAttribute('data-tooltip-target'));
+        console.log();
+        tooltip.style.bottom = '30px';
+        tooltip.style.left = -(tooltip.offsetWidth) + 20 + 'px';
+        tooltip.classList.remove('invisible');
+    }
+
+    hideTooltip(icon) {
+        document.getElementById(icon.getAttribute('data-tooltip-target')).classList.add('invisible');
     }
 }

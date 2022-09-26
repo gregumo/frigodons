@@ -66,6 +66,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'supervisor', targetEntity: SupervisingDate::class, orphanRemoval: true)]
     private Collection $supervisingDates;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
+    private bool $callbackMailOptIn;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
+    private bool $missingVolunteerMailOptIn;
+
     public function __construct()
     {
         $this->cleaningDates = new ArrayCollection();
@@ -178,6 +184,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function isCallbackMailOptIn(): bool
+    {
+        return $this->callbackMailOptIn;
+    }
+
+    public function setCallbackMailOptIn(bool $callbackMailOptIn): self
+    {
+        $this->callbackMailOptIn = $callbackMailOptIn;
+
+        return $this;
+    }
+
+    public function isMissingVolunteerMailOptIn(): bool
+    {
+        return $this->missingVolunteerMailOptIn;
+    }
+
+    public function setMissingVolunteerMailOptIn(bool $missingVolunteerMailOptIn): self
+    {
+        $this->missingVolunteerMailOptIn = $missingVolunteerMailOptIn;
 
         return $this;
     }

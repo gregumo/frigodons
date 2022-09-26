@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,29 +41,31 @@ class UserRepository extends ServiceEntityRepository
 
     public function getVolunteers(): array
     {
-        return $this->createQueryBuilder('u')
-            ->select('u.firstname', 'u.lastname', 'u.email', 'u.phone')
-            ->addSelect('(SELECT COUNT(cd) FROM App\Entity\CleaningDate cd WHERE cd.cleaner = u) AS cleaningCount')
-            ->where("JSON_GET_TEXT(u.roles,0) = 'ROLE_VOLUNTEER'")
-            ->orderBy('u.firstname')
-            ->addOrderBy('u.lastname')
-/*            ->setParameters([
-                'startDate' => (new \DateTime())->format('Y') . '-01-01',
-                'endDate' => (new \DateTime())->format('Y') . '-12-31',
-            ])*/
-            ->getQuery()->getResult();
+        return $this->getUserQbForRole('ROLE_VOLUNTEER')
+            ->getQuery()
+            ->getResult();
     }
 
     public function getManagers(): array
     {
-        return $this->createQueryBuilder('u')
-            ->select('u.firstname', 'u.lastname', 'u.email', 'u.phone')
-            ->addSelect('(SELECT COUNT(cd) FROM App\Entity\CleaningDate cd WHERE cd.cleaner = u) AS cleaningCount')
-            ->addSelect('(SELECT COUNT(sd) FROM App\Entity\SupervisingDate sd WHERE sd.supervisor = u) AS supervisingCount')
-            ->where("JSON_GET_TEXT(u.roles,0) = 'ROLE_MANAGER' ")
-            ->orderBy('u.firstname')
-            ->addOrderBy('u.lastname')
+        return $this->getUserQbForRole('ROLE_MANAGER')
+            ->addSelect('(SELECT COUNT(sd) FROM App\Entity\SupervisingDate sd WHERE sd.supervisor = u AND sd.day >= :startDate AND sd.day <= :endDate) AS supervisingCount')
             ->getQuery()
             ->getResult();
+    }
+
+    private function getUserQbForRole(string $role): QueryBuilder
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.firstname', 'u.lastname', 'u.email', 'u.phone', 'u.callbackMailOptIn', 'u.missingVolunteerMailOptIn')
+            ->addSelect('(SELECT COUNT(cd) FROM App\Entity\CleaningDate cd WHERE cd.cleaner = u AND cd.day >= :startDate AND cd.day <= :endDate) AS cleaningCount')
+            ->where("JSON_GET_TEXT(u.roles,0) = :role")
+            ->orderBy('u.firstname')
+            ->addOrderBy('u.lastname')
+            ->setParameters([
+                'role' => $role,
+                'startDate' => (new \DateTime())->format('Y') . '-01-01',
+                'endDate' => (new \DateTime())->format('Y') . '-12-31',
+            ]);
     }
 }
