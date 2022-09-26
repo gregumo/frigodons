@@ -1,5 +1,5 @@
 import Routing from "fos-router";
-import {CalendarClass} from "../calendar";
+import {Calendar} from "./calendar";
 
 export default class Modal {
     constructor(id) {
@@ -12,13 +12,21 @@ export default class Modal {
     }
 
     init() {
+        let helpButtons = document.querySelectorAll("button[data-help-modal]");
+        if (helpButtons) {
+            helpButtons.forEach((item) => {
+                item.addEventListener('click', (e) => {
+                    window.dialogModal.open(item.dataset);
+                });
+            });
+        }
+
         this.closebtn.addEventListener('click', this.close.bind(this), false);
         this.sendbtn.addEventListener('click', this.send.bind(this), false);
     }
 
     open(data) {
-        console.log(data);
-        if(!data.modal) {
+        if (!data.modal) {
             return;
         }
 
@@ -26,7 +34,7 @@ export default class Modal {
         this.content.innerHTML = data.content;
         this.closebtn.querySelector('.text').innerHTML = data.closebtn;
 
-        if(data.displaysendbtn) {
+        if (data.displaysendbtn) {
             this.sendbtn.dataset.day = data.day;
             this.sendbtn.dataset.route = data.route;
             this.sendbtn.dataset.method = data.method;
@@ -47,8 +55,8 @@ export default class Modal {
     }
 
     send() {
-       let btnData = this.sendbtn.dataset;
-       let calData = document.getElementById('calendarContent').dataset;
+        let btnData = this.sendbtn.dataset;
+        let calData = document.getElementById('calendarContent').dataset;
 
         let data = {
             context: btnData.context,
@@ -57,7 +65,7 @@ export default class Modal {
             year: calData.year,
         };
 
-        let url = Routing.generate(btnData.route) + '?XDEBUG_SESSION=PHPSTORM';
+        let url = Routing.generate(btnData.route);
 
         this.startLoading();
 
@@ -69,19 +77,24 @@ export default class Modal {
             },
             body: JSON.stringify(data),
         })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log('Success:');
-            document.getElementById('calendarContainer').innerHTML = data.html;
-            this.stopLoading();
-            this.close();
-            CalendarClass.init();
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            this.stopLoading();
-            this.close();
-        });
+            .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        window.dialogModal.error();
+                        return;
+                    }
+
+                    response.json().then(function(data) {
+                        document.getElementById('calendarContainer').innerHTML = data.html;
+                        window.dialogModal.stopLoading();
+                        window.dialogModal.close();
+                        Calendar.init();
+                    });
+                }
+            )
+            .catch((error) => {
+                window.dialogModal.error();
+            });
     }
 
     startLoading() {
@@ -94,5 +107,10 @@ export default class Modal {
         this.sendbtn.querySelector('.spin').classList.add('hidden');
         this.closebtn.disabled = false;
         this.sendbtn.disabled = false;
+    }
+
+    error() {
+        document.getElementById('fetchErrorMessage').classList.remove('hidden');
+        document.getElementById('modalButtons').classList.add('hidden');
     }
 }

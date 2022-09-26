@@ -10,10 +10,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     const MAN = 'm';
@@ -27,18 +30,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email(
+        message: 'L\'adresse e-mail {{ value }} n\'est pas une adresse valide.',
+    )]
     private ?string $email = null;
 
     #[ORM\Column()]
     private ?string $password = null;
 
     #[ORM\Column()]
+    #[Assert\NotBlank]
     private ?string $firstname = null;
 
     #[ORM\Column()]
+    #[Assert\NotBlank]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+        pattern: '/^(?:[\s.-]*\d{2}){5}$/',
+        message: 'Le numéro doit être au format 00 00 00 00 00'
+    )]
     private ?string $phone = null;
 
     #[ORM\Column(length: 1, nullable: true)]

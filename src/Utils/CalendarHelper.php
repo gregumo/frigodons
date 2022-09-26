@@ -12,16 +12,19 @@ class CalendarHelper
     private Environment $twig;
     private ManagerRegistry $doctrine;
     private CalendarDaysInjector $injector;
+    private ParticipationHelper $participationHelper;
 
     public function __construct(
         Environment $twig,
         ManagerRegistry      $doctrine,
         CalendarDaysInjector $injector,
+        ParticipationHelper $participationHelper
     )
     {
         $this->twig = $twig;
         $this->doctrine = $doctrine;
         $this->injector = $injector;
+        $this->participationHelper = $participationHelper;
     }
 
     public function prepareView($month, $year, $template): string
@@ -55,8 +58,14 @@ class CalendarHelper
             $this->doctrine->getRepository(CleaningDate::class)->findBetweenDates(reset($calendarDays), end($calendarDays))
         );
 
+        $participationContent = $this->participationHelper->render();
+
+        $intl = \IntlDateFormatter::create('fr_FR',\IntlDateFormatter::FULL,\IntlDateFormatter::NONE, null,\IntlDateFormatter::GREGORIAN, 'MMMM Y');
+        $frMonthDate = ucfirst($intl->format($currentDate));
+
         return $this->twig->render($template, compact(
-            'calendarDays', 'supervisingDates', 'cleaningDates', 'currentMonth', 'currentYear', 'previousMonth', 'previousMonthYear', 'nextMonth', 'nextMonthYear'
+            'participationContent','frMonthDate', 'calendarDays', 'supervisingDates', 'cleaningDates',
+            'currentMonth', 'currentYear', 'previousMonth', 'previousMonthYear', 'nextMonth', 'nextMonthYear'
         ));
     }
 

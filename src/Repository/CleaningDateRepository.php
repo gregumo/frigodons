@@ -3,51 +3,34 @@
 namespace App\Repository;
 
 use App\Entity\CleaningDate;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CleaningDate>
- *
  * @method CleaningDate|null find($id, $lockMode = null, $lockVersion = null)
  * @method CleaningDate|null findOneBy(array $criteria, array $orderBy = null)
  * @method CleaningDate[]    findAll()
  * @method CleaningDate[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CleaningDateRepository extends ServiceEntityRepository
+class CleaningDateRepository extends DateRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CleaningDate::class);
     }
 
-    public function add(CleaningDate $entity, bool $flush = false): void
+    public function findScheduledDatesForUser(User $user, $userFieldName = null): array
     {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        return parent::findScheduledDatesForUser($user, 'cleaner');
     }
 
-    public function remove(CleaningDate $entity, bool $flush = false): void
+    public function countYearDoneDatesForUser(User $user, $userFieldName = null): int
     {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        return parent::countYearDoneDatesForUser($user, 'cleaner');
     }
 
-    public function findBetweenDates(string $startDate, string $endDate): array
+    public function countYearScheduledDatesForUser(User $user, $userFieldName = null): int
     {
-        return $this->createQueryBuilder('c')
-            ->where('c.day BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDate)
-            ->setParameter('endDate', $endDate)
-            ->orderBy('c.day', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
+        return parent::countYearScheduledDatesForUser($user, 'cleaner');
     }
 }

@@ -16,7 +16,9 @@
     </head>
     <body class="text-black bg-beige">
         {% include 'part/nav.html.twig' %}
-        {% block body %}{% endblock %}
+        <div class="container mx-auto mt-5 mb-10 px-5">
+            {% block body %}{% endblock %}
+        </div>
         {% include 'part/dialog_modal.html.twig' %}
     </body>
 </html>

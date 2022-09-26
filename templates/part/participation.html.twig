@@ -1,0 +1,23 @@
+{% if is_granted('ROLE_MANAGER') %}
+  <h3 class="participationH3">En tant que bénévole</h3>
+{% endif %}
+<p>Nous sommes {{ volunteersCount }} bénévoles cette année. Pour que le Frig'o dons soit nettoyé chaque jour, l'idéal
+  serait que chacun réalise <b>{{ (nbYearDate()/volunteersCount)|round }} jours de nettoyage</b> dans l'année.</p>
+<p>Voici les chiffres que nous avons enregistré pour vous cette année :</p>
+<span class="inline-block mt-2 bg-teal-500 text-white mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+              {{ 'badge.cleaning_dates_done'|trans({'nb': yearDoneCleaningDatesCount}) }}
+            </span><br/>
+<span class="inline-block mt-2 bg-rose-500 text-white mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+              {{ 'badge.cleaning_dates_scheduled'|trans({'nb': yearScheduledCleaningDatesCount}) }}
+            </span><br/>
+{% if is_granted('ROLE_MANAGER') %}
+  <h3 class="participationH3">En tant que responsable</h3>
+  <p>Nous sommes {{ managersCount }} responsables cette année. Il faudrait que chacun programme
+    <b>{{ (nbYearDate()/managersCount)|round }} jours en tant que responsable </b> dans l'année.</p>
+  <span class="inline-block mt-2 bg-teal-500 text-white mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+              {{ 'badge.supervising_dates_done'|trans({'nb': yearDoneSupervisingDatesCount}) }}
+            </span><br/>
+  <span class="inline-block mt-2 bg-rose-500 text-white mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+              {{ 'badge.supervising_dates_scheduled'|trans({'nb': yearScheduledSupervisingDatesCount}) }}
+            </span><br/>
+{% endif %}

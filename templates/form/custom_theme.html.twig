@@ -1,0 +1,35 @@
+{%- block form_widget_simple -%}
+  {%- set type = type|default('text') -%}
+  {%- if type == 'range' or type == 'color' -%}
+    {# Attribute "required" is not supported #}
+    {%- set required = false -%}
+  {%- endif -%}
+  {% if type != 'hidden' %}<div class="flex items-center border-2 px-3 rounded-2xl bg-white mb-4">{% endif %}
+  <input type="{{ type }}"
+         class="pl-2 py-2 w-full outline-none border-none" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+  {% if type != 'hidden' %}</div>{% endif %}
+{%- endblock form_widget_simple -%}
+
+{%- block form_row -%}
+  {%- set widget_attr = {} -%}
+  {%- if help is not empty -%}
+    {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+  {%- endif -%}
+  <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+    {{- form_widget(form, widget_attr) -}}
+    {{- form_errors(form) -}}
+    {{- form_help(form) -}}
+  </div>
+{%- endblock form_row -%}
+
+{%- block form_errors -%}
+  {%- if errors|length > 0 -%}
+    <div class="px-4 py-2 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+      <ul>
+        {%- for error in errors -%}
+          <li>{{ error.message }}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+{%- endblock form_errors -%}

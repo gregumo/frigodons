@@ -1,14 +1,12 @@
-{% set today = 'now'|date('Y-m-d') %}
 {% set frenchDays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
-{% set frenchMonths = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'] %}
 
-<div id="calendarContent" class="wrapper bg-white rounded shadow w-full mt-5 mb-20"
+<div id="calendarContent" class="wrapper bg-white rounded shadow w-full mt-5"
 data-month="{{ currentMonth }}"
 data-year="{{ currentYear }}"
 >
   <div class="header flex justify-between border-b p-2">
                 <span class="text-lg font-bold">
-                  {{ frenchMonths[currentMonth -1] }} {{ currentYear }}
+                  {{ frMonthDate }}
                 </span>
     <div class="buttons">
       <button class="p-1">
@@ -49,7 +47,7 @@ data-year="{{ currentYear }}"
           {% set day = calendarDays[loop.index - 1 + (loop.parent.loop.index -1) * 7] %}
           {% set date = cleaningDates[day] %}
           <td
-                  class="border-2 p-1 h-20 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition duration-500 ease
+                  class="border-2 p-1 h-20 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition duration-300 ease
                                 {% if day == 'now'|date('Y-m-d') %}
                                     border-red-600 border-double
                                 {% endif %}
@@ -57,9 +55,9 @@ data-year="{{ currentYear }}"
                                     cursor-pointer
                                 {% endif %}
                                 {% if date.mode in ['delete', 'unauthorized_delete'] %}
-                                    bg-purple {% if date.modal %}hover:bg-purple-600{% endif %}
+                                    {% if date.modal %}bg-purple hover:bg-purple-600{% else %}bg-purple-200{% endif %}
                                 {% elseif date.mode in ['cleaner_contact', 'cleaner_contact'] %}
-                                    bg-blue-400 {% if date.modal %}hover:bg-blue-500{% endif %}
+                                    {% if date.modal %}bg-blue-400 hover:bg-blue-500{% else %}bg-blue-200{% endif %}
                                 {% elseif day|date('m') != currentMonth %}
                                     bg-gray-100 {% if date.modal %}hover:bg-gray-300{% endif %}
                                 {% elseif date.modal %}
@@ -81,13 +79,13 @@ data-year="{{ currentYear }}"
                  data-context="cleaning"
             >
               <div class="top h-5 w-full">
-                                        <span class="
-                                            {% if date.mode in ['delete', 'unauthorized_delete', 'cleaner_contact'] %}
-                                                text-white
-                                            {% else %}
-                                                text-gray-500
-                                            {% endif %}
-                                        ">{{ day|date('j') }}</span>
+                  <span class="
+                      {% if date.mode in ['delete', 'unauthorized_delete', 'cleaner_contact'] %}
+                          text-white
+                      {% else %}
+                          text-gray-500
+                      {% endif %}
+                  ">{{ day|date('j') }}</span>
               </div>
               <div class="bottom flex-grow h-20 py-1 w-full text-white p-1 md:text-sm text-xs mt-3">
                 {% if date.user is not null %}
@@ -123,7 +121,9 @@ data-year="{{ currentYear }}"
                  data-user="{{ date.user is not null ? date.user.id : '' }}"
                  data-context="supervising"
             >
-              <div class="flex-grow h-10 py-1 w-full text-black text-sm mt-1">
+              <div class="flex-grow h-10 py-1 w-full text-sm mt-1
+              {% if date.modal %}text-black {% else %}text-black-200 {% endif %}
+            ">
                 {% if date.user is not null %}
                   {{ date.user.fullName }}
                 {% endif %}

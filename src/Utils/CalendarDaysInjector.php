@@ -57,10 +57,10 @@ class CalendarDaysInjector
                 $date = $bookedDays[$day];
                 $user = $date->getUser();
 
+                if($day < (new \DateTime())->format('Y-m-d')){
+                    $modal = false;
+                }
                 if($this->currentUser === $user) {
-                    if($day < (new \DateTime())->format('Y-m-d')){
-                        $modal = false;
-                    }
                     if($day > $threeDaysAfterToday) {
                         $mode = 'delete';
                         $route = 'app_calendar_delete';

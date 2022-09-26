@@ -1,0 +1,68 @@
+{% extends 'base_content.html.twig' %}
+
+{% set nbYearDate = nbYearDate() %}
+{% set cleanersMustDo = (nbYearDate/(volunteers|length + managers|length))|round %}
+{% set supervisorsMustDo = (nbYearDate/managers|length)|round %}
+
+{% block title %}Annuaire{% endblock %}
+
+{% block body %}
+  <h1>Annuaire</h1>
+  {% set userTypes = {'Responsables': managers, 'Bénévoles': volunteers} %}
+  {% for title, list in userTypes %}
+  <h2>{{ title }}</h2>
+
+  <table class="table-auto min-w-full leading-normal text-sm">
+    <thead>
+    <tr>
+      {% set headers = ['Prénom', 'Nom', 'E-mail', 'Téléphone', 'Rappel auto', 'Quota nettoyage', 'Quota responsable'] %}
+      {% for header in headers %}
+        {% if title == 'Bénévoles' and header == 'Quota responsable' %}
+          {% set break = true %}
+        {% else %}
+          <th class="px-5 py-2 border-b-2 border-gray-200 bg-blue-400 text-white text-left text-sm font-semibold uppercase tracking-wider
+            {% if 'Quota' in header %}text-center{% endif %}
+          ">
+            {{ header }}
+          </th>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in list %}
+    <tr class="even:bg-gray-100 odd:bg-white hover:bg-gray-300">
+      <td class="px-5 py-2 border-b border-gray-200">
+        {{ user.firstname }}
+      </td>
+      <td class="px-5 py-2 border-b border-gray-200">
+        {{ user.lastname }}
+      </td>
+      <td class="px-5 py-2 border-b border-gray-200">
+        {{ user.email }}
+      </td>
+      <td class="px-5 py-2 border-b border-gray-200">
+        {{ user.phone }}
+      </td>
+      <td class="px-5 py-2 border-b border-gray-200">
+      </td>
+        {% set ratio = (user.cleaningCount/cleanersMustDo)*100 %}
+      <td class="px-5 py-2 border-b border-gray-200 text-center">
+          <span class="inline-block mt-2 {{ color_ratio(ratio) }} mr-2 px-2.5 py-0.5 rounded text-red-700 bg-red-100">
+            {{ user.cleaningCount }} / {{ cleanersMustDo }}
+          </span>
+      </td>
+      {% if title == 'Responsables' %}
+          {% set ratio = (user.supervisingCount/supervisorsMustDo)*100 %}
+        <td class="px-5 py-2 border-b border-gray-200 text-center">
+          <span class="inline-block mt-2 {{ color_ratio(ratio) }} mr-2 px-2.5 py-0.5 rounded">
+            {{ user.supervisingCount }} / {{ supervisorsMustDo }}
+          </span>
+        </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+    {% endfor %}
+ {% endblock %}

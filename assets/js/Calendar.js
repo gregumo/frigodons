@@ -1,15 +1,14 @@
-import Date from "./Date"
-
 class CalendarInit {
     init() {
         this.allDates = document.querySelectorAll("div[data-day]")
         if (this.allDates) {
             this.allDates.forEach((item) => {
-                const date = new Date(item)
-                date.init(item)
+                item.addEventListener('click', (e) => {
+                    window.dialogModal.open(e.target.closest('.dayCell').dataset);
+                });
             })
         }
     }
 }
 
-export const CalendarClass = new CalendarInit()
+export const Calendar = new CalendarInit()

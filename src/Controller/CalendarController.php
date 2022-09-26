@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\DataTransformer\DatesCollectionTransformer;
 use App\Entity\CleaningDate;
 use App\Entity\SupervisingDate;
 use App\Repository\DateInterface;
@@ -10,7 +9,6 @@ use App\Security\Voter\DayVoter;
 use App\Utils\CalendarDaysInjector;
 use App\Utils\CalendarHelper;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CalendarController extends AbstractController
 {
     #[Route('/calendrier/{month<\d+>}/{year<\d+>}', name: 'app_calendar')]
-    public function index(CalendarHelper $calendarHelper, ?int $month = null, ?int $year = null): Response
+    public function index(ManagerRegistry $doctrine, CalendarHelper $calendarHelper, ?int $month = null, ?int $year = null): Response
     {
         return new Response($calendarHelper->prepareView($month, $year, 'calendar/index.html.twig'));
     }

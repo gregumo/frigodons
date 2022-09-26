@@ -8,10 +8,18 @@ module.exports = {
     extend: {
       colors: {
         'purple': '#747ad5',
+        'blue-200': '#B2CBF1',
+        'purple-200': '#B2B2D2',
         'purple-600': '#6269d0',
         'yellow': '#f1d275',
-        'beige': '#ecf8f5',
+        'yellow-700': '#8D6F17',
+        'beige': '#F2F0F0',
+        'black-200': '#9B9797',
+        'black-400': '#686565',
         'black': '#210b09',
+        'red-soft': '#F56A68',
+        'orange-soft': '#F98B41',
+        'green-soft': '#1ABC59'
       },
     },
     fontSize: {
@@ -21,8 +29,8 @@ module.exports = {
       'base': '1rem',
       'lg': '1.125rem',
       'xl': '1.25rem',
-      '2xl': '1.5rem',
-      '3xl': '1.875rem',
+      '2xl': '1.4rem',
+      '3xl': '1.7rem',
       '4xl': '2.25rem',
       '5xl': '3rem',
       '6xl': '4rem',

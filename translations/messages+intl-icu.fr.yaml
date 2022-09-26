@@ -24,10 +24,10 @@ modal:
     supervisor_contact:
         title: Contacter {gender, select, m {le} other {la}} responsable
         content: >-
-          {gender, select,
-            m {Le responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez le contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
-            other {La responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez la contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
-          }
+            {gender, select,
+              m {Le responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez le contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
+              other {La responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez la contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
+            }
         closeBtn: Fermer
     cleaner_contact:
         title: Contacter {gender, select, m {le} other {la}} bénévole
@@ -37,3 +37,28 @@ modal:
               other {La bénévole du {date} est <b>{fullName}</b>.<br/>Vous pouvez la contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
             }
         closeBtn: Fermer
+badge:
+    cleaning_dates_done: >-
+        {nb, plural,
+            =0 {Aucun jour de nettoyage réalisé}
+            one {1 jour de nettoyage réalisé}
+            other {# jours de nettoyage réalisés}
+        }
+    cleaning_dates_scheduled: >-
+        {nb, plural,
+            =0 {Aucun jour de nettoyage à venir}
+            one {1 jour de nettoyage à venir}
+            other {# jours de nettoyage à venir}
+        }
+    supervising_dates_done: >-
+        {nb, plural,
+            =0 {Aucun jour de responsable réalisé}
+            one {1 jour de responsable réalisé}
+            other {# jours de responsable réalisés}
+        }
+    supervising_dates_scheduled: >-
+        {nb, plural,
+            =0 {Aucun jour de responsable à venir}
+            one {1 jour de responsable à venir}
+            other {# jours de responsable à venir}
+        }

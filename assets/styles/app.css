@@ -3,10 +3,75 @@
 @tailwind utilities;
 
 @layer base {
+    body{
+        font-family: Arial, system-ui, sans-serif;
+        font-size: theme('fontSize.base');
+    }
     h1 {
-        font-family: Chelsea Market, system-ui, sans-serif;
+        font-family: Oswald, system-ui, sans-serif;
+        font-weight: 500;
+        font-size: theme('fontSize.3xl');
+        padding:0 0 0.4em 0;
         text-transform: uppercase;
-        font-size:3em;
+    }
+    .home h1 {
+        font-family: Chelsea Market, system-ui, sans-serif;
+        font-size: theme('fontSize.4xl');
+    }
+    h2 {
+        font-family: Oswald, system-ui, sans-serif;
+        font-size: theme('fontSize.2xl');
+        font-weight: 400;
+        padding:0 0 0.6em 0;
+        margin-top: 2em;
+    }
+    h2:first-of-type {
+        margin-top: 0;
+    }
+    h3 {
+        font-family: Oswald, system-ui, sans-serif;
+        font-size: theme('fontSize.xl');
+        color: theme('colors.black-400');
+        font-weight: 400;
+        padding:0 0 0.6em 0;
+        margin-top: 2em;
+    }
+    h3:first-of-type {
+        margin-top: 0;
+    }
+    #dialogModal h1{
+        padding:0;
+    }
+    #dialogModal h2{
+        margin-top:1em;
+    }
+    #dialogModal h2:first-of-type {
+        margin-top: 0;
+    }
+    #dialogModal .participationH3{
+        display:none;
+    }
+    ul {
+        list-style-position: inside;
+    }
+
+}
+
+@screen md {
+    body{
+        font-size: theme('fontSize.base');
+    }
+    h1 {
+        font-size: theme('fontSize.4xl');
+    }
+    h2 {
+        font-size: theme('fontSize.3xl');
+    }
+    h3 {
+        font-size: theme('fontSize.2xl');
+    }
+    .home h1 {
+        font-size: theme('fontSize.6xl');
     }
 }
 

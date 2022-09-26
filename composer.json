@@ -14,6 +14,8 @@
         "doctrine/orm": "^2.13",
         "friendsofsymfony/jsrouting-bundle": "^3.2",
         "gedmo/doctrine-extensions": "^3.8",
+        "scienta/doctrine-json-functions": "^5.1",
+        "sensio/framework-extra-bundle": "^6.2",
         "symfony/console": "6.1.*",
         "symfony/dotenv": "6.1.*",
         "symfony/flex": "^2",
