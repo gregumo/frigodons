@@ -67,4 +67,22 @@ abstract class DateRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getNextWeekDatesForUser(User $user, $userFieldName): array
+    {
+        $nextMonday = (new \DateTime())->modify('next monday');
+
+        return $this->createQueryBuilder('d')
+            ->where('d.day >= :startDate')
+            ->andWhere('d.day <= :endDate')
+            ->andWhere("d.$userFieldName = :user")
+            ->setParameters([
+                'startDate' => $nextMonday->format('Y-m-d'),
+                'endDate' => $nextMonday->modify('next sunday')->format('Y-m-d'),
+                'user' => $user
+            ])
+            ->orderBy('d.day', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

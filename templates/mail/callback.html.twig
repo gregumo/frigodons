@@ -1,0 +1,31 @@
+{% extends 'mail/_base.html.twig' %}
+
+{% block content %}
+
+  <p>Bonjour {{ user.firstname }},</p>
+
+  {{ 'callback.content.intro'|trans({'gender': user.gender}, 'mail') }}
+
+  {% if cleaningDates|length > 0 %}
+    {% if user.isManager %}
+      <h2>En tant que bénévole</h2>
+    {% endif %}
+    <ul>
+      {% for cleaningDate in cleaningDates %}
+        <li>{{ cleaningDate.day|frDate }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if user.isManager and supervisingDates|length > 0 %}
+    <h2>En tant que responsable</h2>
+    <ul>
+      {% for supervisingDate in supervisingDates %}
+        <li>{{ supervisingDate.day|frDate }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endblock %}
+
+

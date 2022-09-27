@@ -33,4 +33,9 @@ class SupervisingDateRepository extends DateRepository
     {
         return parent::countYearScheduledDatesForUser($user, 'supervisor');
     }
+
+    public function getNextWeekDatesForUser(User $user, $userFieldName = null): array
+    {
+        return parent::getNextWeekDatesForUser($user, 'supervisor');
+    }
 }

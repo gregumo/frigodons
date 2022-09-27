@@ -1,0 +1,22 @@
+callback:
+    title: >-
+            {cleaningCount, plural,
+                =0 {
+                    {supervisingCount, plural,
+                        one {Frig'o dons - Vous avez 1 jour de responsable la semaine prochaine}
+                        other {Frig'o dons - Vous avez {supervisingCount, number} jours de responsable la semaine prochaine}}}
+                one {
+                    {supervisingCount, plural,
+                        =0 {Frig'o dons - Vous avez 1 jour de bénévolat la semaine prochaine}
+                        one {Frig'o dons - Vous avez 1 jour de bénévolat et 1 jour de responsable la semaine prochaine}
+                        other {Frig'o dons - Vous avez 1 jour de bénévolat et {supervisingCount, number} jours de responsable la semaine prochaine}}}
+                other {
+                    {supervisingCount, plural,
+                        =0 {Frig'o dons - Vous avez {cleaningCount, number} jours de bénévolat la semaine prochaine}
+                        one {Frig'o dons - Vous avez {cleaningCount, number} jours de bénévolat et 1 jour de responsable la semaine prochaine}
+                        other {Frig'o dons - Vous avez {cleaningCount, number} jours de bénévolat et {supervisingCount, number} jours de responsable la semaine prochaine}}}}
+    content:
+        intro: >-
+                {gender, select,
+                        w {Vous avez demandé à être alertée pour vos dates de bénévolat. Voici vos dates pour la semaine prochaine :}
+                        other {Vous avez demandé à être alerté pour vos dates de bénévolat. Voici vos dates pour la semaine prochaine :}}

@@ -1,0 +1,74 @@
+{% apply inline_css %}
+  <style>
+      body {
+          background-color: #F2F0F0;
+          font-family: Arial, system-ui, sans-serif;
+          padding:20px;
+      }
+
+      .container {
+          margin: 0 auto;
+          max-width: 600px;
+      }
+
+      .logo {
+          width: 260px;
+      }
+
+      .header {
+          background: #8086DD;
+          border-bottom: 10px solid #686DB7;
+          padding: 15px;
+          text-align:center;
+      }
+
+      .content {
+          background: #FFFFFF;
+          border-bottom: 10px solid #DDDDDD;
+          padding: 20px 40px;
+      }
+
+      .footer {
+          font-style: italic;
+          font-size:0.9em;
+          padding: 0 40px;
+          text-align: center;
+      }
+
+      h2 {
+          font-size:1.2em;
+      }
+
+      a{
+          color: #5E63B2;
+      }
+
+      li{
+          padding: 2px 0;
+      }
+
+  </style>
+
+  <div class="container">
+
+    <div class="header">
+      <a href="{{ absolute_url(path('app_content_home')) }}">
+        <img class="logo" src="{{ absolute_url(asset('img/bandeau_mail.png')) }}" alt="Frig'o dons"/>
+      </a>
+    </div>
+
+    <div class="content">
+      {% block content %}{% endblock %}
+
+      <br/>
+      <p>Toute l'équipe de La Cordée vous remercie pour votre aide !</p>
+    </div>
+
+    <div class="footer">
+      <p>Si vous ne souhaitez plus recevoir les mails de rappel, <b><a href="{{ absolute_url(path('app_user_edit')) }}">cliquez-ici</a></b>, connectez-vous si besoin et allez sur la page "Mes informations".
+        Vous pourrez modifier vos préférences pour ne plus recevoir ces mails.</p>
+    </div>
+  </div>
+{% endapply %}
+
+
