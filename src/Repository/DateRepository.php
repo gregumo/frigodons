@@ -85,4 +85,25 @@ abstract class DateRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getNext2WeeksAvailableDays($userFieldName): array
+    {
+        $startDate = (new \DateTime())->modify('next monday');
+        $endDate = clone $startDate;
+        $endDate->add(new \DateInterval('P14D'));;
+        $period = new \DatePeriod($startDate, new \DateInterval('P1D'), $endDate);
+        $dates = array_map(fn ($v) => $v->format('Y-m-d'), iterator_to_array($period));
+
+        $bookedDates = $this->createQueryBuilder('d')
+            ->select('d.day')
+            ->where('d.day IN (:dates)')
+            ->setParameters([
+                'dates' => $dates,
+            ])
+            ->orderBy('d.day', 'ASC')
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        return array_map(fn ($v) => \DateTime::createFromFormat('Y-m-d', $v), array_diff($dates, $bookedDates));
+    }
 }

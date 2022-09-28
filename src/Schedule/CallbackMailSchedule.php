@@ -5,7 +5,7 @@ namespace App\Schedule;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 
-class MissingVolunteerMailSchedule implements ScheduleBuilder
+class CallbackMailSchedule implements ScheduleBuilder
 {
     public function buildSchedule(Schedule $schedule): void
     {
@@ -14,9 +14,9 @@ class MissingVolunteerMailSchedule implements ScheduleBuilder
             ->environments('prod')
         ;
 
-        $schedule->addCommand('app:missing-volunteer-mail')
+        $schedule->addCommand('app:callback-mail')
             ->sundays()
-            ->at(5)
+            ->at(6)
         ;
     }
 }

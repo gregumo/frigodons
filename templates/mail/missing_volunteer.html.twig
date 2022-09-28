@@ -1,0 +1,38 @@
+{% extends 'mail/_base.html.twig' %}
+
+{% block content %}
+
+  <style>
+      .header {
+          background: #EDCE71;
+          border-bottom: 10px solid #E0C269;
+      }
+  </style>
+
+  <p>Bonjour {{ user.firstname }},</p>
+
+  {{ 'missing_volunteer.content.intro'|trans({'gender': user.gender}, 'mail') }}
+
+  {% if cleaningAvailableDays|length > 0 %}
+    {% if user.isManager %}
+      <h2>{{ 'missing_volunteer.content.subtitle.volunteer'|trans({'count': cleaningAvailableDays|length}, 'mail') }}</h2>
+    {% endif %}
+    <ul>
+      {% for cleaningAvailableDay in cleaningAvailableDays %}
+        <li>{{ cleaningAvailableDay|frDate }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if user.isManager and supervisingAvailableDays|length > 0 %}
+    <h2>{{ 'missing_volunteer.content.subtitle.manager'|trans({'count': cleaningAvailableDays|length}, 'mail') }}</h2>
+    <ul>
+      {% for supervisingAvailableDay in supervisingAvailableDays %}
+        <li>{{ supervisingAvailableDay|frDate }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endblock %}
+
+

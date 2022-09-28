@@ -26,17 +26,18 @@ use Twig\Environment;
 class MissingVolunteerMailCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private MailBatchRepository $mailBatchRepo,
-        private UserRepository $userRepo,
-        private CleaningDateRepository $cleaningDateRepo,
+        private EntityManagerInterface    $entityManager,
+        private MailBatchRepository       $mailBatchRepo,
+        private UserRepository            $userRepo,
+        private CleaningDateRepository    $cleaningDateRepo,
         private SupervisingDateRepository $supervisingDateRepo,
-        private MailerInterface $mailer,
-        private ContainerBagInterface $params,
-        private TranslatorInterface $translator,
-        private Environment $twig
+        private MailerInterface           $mailer,
+        private ContainerBagInterface     $params,
+        private TranslatorInterface       $translator,
+        private Environment               $twig
 
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -45,62 +46,63 @@ class MissingVolunteerMailCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
 
-        if($this->mailBatchRepo->todayBatchExists(MailBatch::TYPE_MISSING_VOLUNTEER)){
+        if ($this->mailBatchRepo->todayBatchExists(MailBatch::TYPE_MISSING_VOLUNTEER)) {
             $io->error('La commande a déjà été lancée aujourd\'hui');
 
             return Command::FAILURE;
         }
 
-        if($this->mailBatchRepo->previousSundayBatchExists(MailBatch::TYPE_MISSING_VOLUNTEER)){
+        if ($this->mailBatchRepo->previousSundayBatchExists(MailBatch::TYPE_MISSING_VOLUNTEER)) {
             $io->warning('La commande a été lancée dimanche dernier, on attend une semaine de plus');
 
             return Command::INVALID;
         }
 
-        die();
-
         $users = $this->userRepo->findByMissingVolunteerMailOptIn(true);
 
         $io->note(sprintf('%s utilisateur(s) acceptent les mails d\'appel aux bénévoles', count($users)));
 
-        $next2WeeksDays = '';
+        $mailData = [
+            'cleaningAvailableDays' => $this->cleaningDateRepo->getNext2WeeksAvailableDays(),
+            'supervisingAvailableDays' => $this->supervisingDateRepo->getNext2WeeksAvailableDays(),
+        ];
 
-        $cleaningBookedDays = $this->cleaningDateRepo->getNext2WeeksBookedDays();
-        $supervisingBookedDays = $this->supervisingDateRepo->getNext2WeeksBookedDays();
+        if(empty($mailData['cleaningAvailableDays']) && empty($mailData['supervisingAvailableDays'])) {
+            $io->warning('Tous les créneaux ont été pourvus. Aucun envoi de mail');
 
-        $usersAndDates = [];
-        foreach ($users as $user) {
-            if(!empty($cleaningDates) || !empty($supervisingDates)) {
-                $usersAndDates[] = compact('user', 'cleaningDates', 'supervisingDates');
-            }
+            return Command::INVALID;
         }
 
-        $io->note(sprintf('Parmi eux, %s ont au moins une date la semaine prochaine', count($usersAndDates)));
-
         $recipients = [];
-        foreach ($usersAndDates as $mailData) {
-            $recipients[] = $recipient = $mailData['user']->getEmail();
+        foreach ($users as $user) {
+            if($user->isVolunteer() && empty($mailData['cleaningAvailableDays'])){
+                continue;
+            }
+
+            $mailData['user'] = $user;
+            $recipients[] = $user->getEmail();
             $email = (new Email())
                 ->from($this->params->get('app.mail_from'))
-                ->to($recipient)
-                ->subject($this->translator->trans('callback.title', [
-                    'cleaningCount' => count($mailData['cleaningDates']),
-                    'supervisingCount' => count($mailData['supervisingDates']),
+                ->to($user->getEmail())
+                ->subject($this->translator->trans('missing_volunteer.title', [
+                    'userType' => $user->isManager() ? 'manager' : 'volunteer',
+                    'cleaningCount' => count($mailData['cleaningAvailableDays']),
+                    'supervisingCount' => count($mailData['supervisingAvailableDays']),
                 ], 'mail'))
-                ->html($this->twig->render('mail/callback.html.twig', $mailData));
+                ->html($this->twig->render('mail/missing_volunteer.html.twig', $mailData));
 
             $this->mailer->send($email);
         }
 
         $mailBatch = (new MailBatch())
-            ->setType(MailBatch::TYPE_CALLBACK)
+            ->setType(MailBatch::TYPE_MISSING_VOLUNTEER)
             ->setSendAt(new \DateTime())
             ->setRecipients($recipients);
 
         $this->entityManager->persist($mailBatch);
         $this->entityManager->flush();
 
-        $io->success(sprintf('Les %s mail(s) ont été envoyé(s)', count($recipients)));
+        $io->success(sprintf('%s mail(s) ont été envoyé(s)', count($recipients)));
 
         return Command::SUCCESS;
     }

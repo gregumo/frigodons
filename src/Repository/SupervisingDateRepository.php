@@ -38,4 +38,9 @@ class SupervisingDateRepository extends DateRepository
     {
         return parent::getNextWeekDatesForUser($user, 'supervisor');
     }
+
+    public function getNext2WeeksAvailableDays($userFieldName = null): array
+    {
+        return parent::getNext2WeeksAvailableDays('supervisor');
+    }
 }

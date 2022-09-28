@@ -1,22 +1,60 @@
 callback:
     title: >-
-            {cleaningCount, plural,
-                =0 {
-                    {supervisingCount, plural,
-                        one {Frig'o dons - Vous avez 1 jour de responsable la semaine prochaine}
-                        other {Frig'o dons - Vous avez {supervisingCount, number} jours de responsable la semaine prochaine}}}
-                one {
-                    {supervisingCount, plural,
-                        =0 {Frig'o dons - Vous avez 1 jour de bénévolat la semaine prochaine}
-                        one {Frig'o dons - Vous avez 1 jour de bénévolat et 1 jour de responsable la semaine prochaine}
-                        other {Frig'o dons - Vous avez 1 jour de bénévolat et {supervisingCount, number} jours de responsable la semaine prochaine}}}
-                other {
-                    {supervisingCount, plural,
-                        =0 {Frig'o dons - Vous avez {cleaningCount, number} jours de bénévolat la semaine prochaine}
-                        one {Frig'o dons - Vous avez {cleaningCount, number} jours de bénévolat et 1 jour de responsable la semaine prochaine}
-                        other {Frig'o dons - Vous avez {cleaningCount, number} jours de bénévolat et {supervisingCount, number} jours de responsable la semaine prochaine}}}}
+        {cleaningCount, plural,
+            =0 {
+                {supervisingCount, plural,
+                    =1 {Frig'o dons | Vos dates - Vous avez 1 jour de responsable la semaine prochaine}
+                    other {Frig'o dons | Vos dates - Vous avez {supervisingCount, number} jours de responsable la semaine prochaine}}}
+            =1 {
+                {supervisingCount, plural,
+                    =0 {Frig'o dons | Vos dates - Vous avez 1 jour de bénévolat la semaine prochaine}
+                    =1 {Frig'o dons | Vos dates - Vous avez 1 jour de bénévolat et 1 jour de responsable la semaine prochaine}
+                    other {Frig'o dons | Vos dates - Vous avez 1 jour de bénévolat et {supervisingCount, number} jours de responsable la semaine prochaine}}}
+            other {
+                {supervisingCount, plural,
+                    =0 {Frig'o dons | Vos dates - Vous avez {cleaningCount, number} jours de bénévolat la semaine prochaine}
+                    =1 {Frig'o dons | Vos dates - Vous avez {cleaningCount, number} jours de bénévolat et 1 jour de responsable la semaine prochaine}
+                    other {Frig'o dons | Vos dates - Vous avez {cleaningCount, number} jours de bénévolat et {supervisingCount, number} jours de responsable la semaine prochaine}}}}
     content:
         intro: >-
-                {gender, select,
-                        w {Vous avez demandé à être alertée pour vos dates de bénévolat. Voici vos dates pour la semaine prochaine :}
-                        other {Vous avez demandé à être alerté pour vos dates de bénévolat. Voici vos dates pour la semaine prochaine :}}
+            {gender, select,
+                    w {Vous avez demandé à être alertée pour vos dates de bénévolat. Voici vos dates pour la semaine prochaine :}
+                    other {Vous avez demandé à être alerté pour vos dates de bénévolat. Voici vos dates pour la semaine prochaine :}}
+missing_volunteer:
+    title: >-
+        {userType, select,
+            volunteer {
+                {cleaningCount, plural,
+                    =1 {Frig'o dons | Appel aux bénévoles - 1 jour de bénévolat encore libre}
+                    other {Frig'o dons | Appel aux bénévoles - {cleaningCount, number} jours de bénévolat encore libres}}}
+            other {
+                {cleaningCount, plural,
+                    =0 {
+                        {supervisingCount, plural,
+                            =1 {Frig'o dons | Appel aux bénévoles - 1 jour de responsable encore libre}
+                            other {Frig'o dons | Appel aux bénévoles - {supervisingCount, number} jours de responsable encore libres}}}
+                    =1 {
+                        {supervisingCount, plural,
+                            =0 {Frig'o dons | Appel aux bénévoles - 1 jour de bénévolat encore libre}
+                            =1 {Frig'o dons | Appel aux bénévoles - 1 jour de bénévolat et 1 jour de responsable encore libres}
+                            other {Frig'o dons | Appel aux bénévoles - 1 jour de bénévolat et {supervisingCount, number} jours de responsable encore libres}}}
+                    other {
+                        {supervisingCount, plural,
+                            =0 {Frig'o dons | Appel aux bénévoles - {cleaningCount, number} jours de bénévolat encore libres}
+                            =1 {Frig'o dons | Appel aux bénévoles - {cleaningCount, number} jours de bénévolat et 1 jour de responsable encore libres}
+                            other {Frig'o dons | Appel aux bénévoles - {cleaningCount, number} jours de bénévolat et {supervisingCount, number} jours de responsable encore libres}}}}}}
+
+    content:
+        intro: >-
+            {gender, select,
+                    w {Vous avez demandé à être alertée lorsqu'il manque des bénévoles. Voici les dates toujours disponibles dans les 2 semaines à venir :}
+                    other {Vous avez demandé à être alerté lorsqu'il manque des bénévoles. Voici les dates toujours disponibles dans les 2 semaines à venir :}}
+        subtitle:
+            volunteer: >-
+                {count, plural,
+                        =1 {Date de bénévole encore libre}
+                        other {Dates de bénévole encore libres}}
+            manager: >-
+                {count, plural,
+                        =1 {Date de responsable encore libre}
+                        other {Dates de responsable encore libres}}

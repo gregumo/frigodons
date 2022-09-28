@@ -38,4 +38,9 @@ class CleaningDateRepository extends DateRepository
     {
         return parent::getNextWeekDatesForUser($user, 'cleaner');
     }
+
+    public function getNext2WeeksAvailableDays($userFieldName = null): array
+    {
+        return parent::getNext2WeeksAvailableDays('cleaner');
+    }
 }

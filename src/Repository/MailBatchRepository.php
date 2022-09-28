@@ -42,7 +42,6 @@ class MailBatchRepository extends ServiceEntityRepository
 
     public function previousSundayBatchExists(string $type): bool
     {
-        var_dump((new \DateTime())->modify('previous sunday')->format('Y-m-d'));
         $result = $this->createQueryBuilder('m')
             ->select('count(m.id)')
             ->where('m.type = :type')
