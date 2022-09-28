@@ -1,0 +1,26 @@
+---
+-   name: PHP | Add ondrej/php repository
+    apt_repository:
+        repo: "ppa:ondrej/php"
+-   name: PHP | Install
+    apt:
+        update_cache: yes
+        name:
+            - "php{{ php_version }}-fpm"
+            - "php{{ php_version }}-pgsql"
+            - "php{{ php_version }}-zip"
+        state: present
+-   name: PHP | Composer
+    shell: |
+        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+        php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+        php composer-setup.php
+        php -r "unlink('composer-setup.php');"
+        mv composer.phar /usr/local/bin/composer
+    #creates: /usr/local/bin/composer
+-   name: PHP | Disable Errors
+    lineinfile:
+        dest: "/etc/php/{{ php_version }}/fpm/php.ini"
+        regexp: "display_errors ="
+        line: "display_errors = 0"
+    notify: php restart
