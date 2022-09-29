@@ -1,0 +1,17 @@
+#-   name: Fix Ansistrano folders permissions
+#    file:
+#        dest: "{{ ansistrano_release_path.stdout }}"
+#        mode: 775
+#        recurse: true
+-   name: Symfony | Composer install
+    become: yes
+    become_user: "{{ user }}"
+    composer:
+        command: install
+        global_command: false
+        working_dir: "{{ ansistrano_release_path.stdout }}"
+        optimize_autoloader: true
+-   name: Symfony | .env.local
+    template:
+        src: env.j2
+        dest: "{{ ansistrano_shared_path }}/.env.local"

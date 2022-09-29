@@ -1,0 +1,35 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name {{ domain }};
+
+    root {{ ansistrano_deploy_to }}/current/public;
+    index index.php index.html;
+    error_page 404 /index.php;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+    location / {
+        try_files $uri $uri/ /index.php?query_string;
+    }
+
+    location ~ \.php {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php{{ php_version }}-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    location ~* \.(jpg|jpeg|gif|css|png|js|ico|html)$ {
+        access_log off;
+        expires max;
+    }
+}

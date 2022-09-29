@@ -1,5 +1,13 @@
-db_user: frigodons
-db_name: frigodons
+php_version: 8.1
+domain: frigodons.org
+ansistrano_deploy_to: "/home/{{ user }}/{{ domain }}"
+ansistrano_deploy_via: git
+ansistrano_git_repo: "{{ ansistrano_deploy_to }}.git"
+ansistrano_git_branch: main
+ansistrano_keep_releases: 5
+ansistrano_shared_paths: ["var"]
+#ansistrano_shared_files: [".env.prod"]
+ansistrano_before_symlink_shared_tasks_file: "{{ playbook_dir }}/tasks/before_symlink.yml"
 db_password: !vault |
     $ANSIBLE_VAULT;1.1;AES256
     66303734646235643032303865613364653531643734373938346465393134313662636663363961
@@ -7,3 +15,5 @@ db_password: !vault |
     36343338306538616262306361663266393335363065653034613732353539656136343363346531
     3162373039666330620a653835643036353633393031653466623133653731343336303533323030
     34666439653036393663623034616335633933313333393639396139373236626266
+db_user: frigodons
+db_name: frigodons

@@ -8,6 +8,7 @@
         name:
             - "php{{ php_version }}-fpm"
             - "php{{ php_version }}-pgsql"
+            - "php{{ php_version }}-xml"
             - "php{{ php_version }}-zip"
         state: present
 -   name: PHP | Composer

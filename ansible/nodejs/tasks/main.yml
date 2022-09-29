@@ -1,0 +1,29 @@
+---
+-   name: NodeJS | Download Installer
+    get_url:
+        url: "https://deb.nodesource.com/setup_{{ nodejs_version }}.x"
+        dest: ~/nodejs
+        mode: 0755
+-   name: NodeJS | Package
+    command: ~/nodejs
+    args:
+        creates: /etc/apt/sources.list.d/nodesource.list
+-   name: Yarn | GPG Key
+    apt_key:
+        url: https://dl.yarnpkg.com/debian/pubkey.gpg
+        state: present
+-   name: Yarn | Package
+    copy:
+        dest: /etc/apt/sources.list.d/yarn.list
+        content: deb https://dl.yarnpkg.com/debian/ stable main
+-   name: NodeJS | Install
+    apt:
+        name:
+            - nodejs
+            - yarn
+        update_cache: true
+-   name: NodeJS | Install globals
+    npm:
+        name: "{{ item }}"
+        global: true
+    with_items: "{{ npm_globals }}"

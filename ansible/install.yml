@@ -19,8 +19,19 @@
                 upgrade: dist
                 update_cache: yes
         -   include_role:
+                name: firewall
+        -   include_role:
                 name: tools
         -   include_role:
                 name: php
         -   include_role:
                 name: pgsql
+        -   include_role:
+                name: nginx
+        -   include_role:
+                name: nodejs
+        -   command: "git init --bare {{ ansistrano_deploy_to }}.git"
+            args:
+                creates: "{{ ansistrano_deploy_to }}.git"
+            become: true
+            become_user: "{{ user }}"
