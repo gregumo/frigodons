@@ -1,11 +1,9 @@
 #-   name: Fix Ansistrano folders permissions
 #    file:
-#        dest: "{{ ansistrano_release_path.stdout }}"
-#        mode: 775
+#        dest: "{{ ansistrano_deploy_to }}"
+#        mode: +x
 #        recurse: true
 -   name: Symfony | Composer install
-    become: yes
-    become_user: "{{ user }}"
     composer:
         command: install
         global_command: false
@@ -15,3 +13,20 @@
     template:
         src: env.j2
         dest: "{{ ansistrano_shared_path }}/.env.local"
+-   name: Symfony | Setup directory permissions for var/
+    file:
+        path: "{{ ansistrano_shared_path }}/{{ item }}"
+        state: directory
+        mode: 0777
+        recurse: true
+        # We need it because logs are symlinks now
+        follow: yes
+    with_items: "{{ ansistrano_shared_paths }}"
+-   name: NPM | Install packages
+    npm:
+        path: "{{ ansistrano_release_path.stdout }}"
+        state: present
+-   name: NPM | Build
+    command: npm run build
+    args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
