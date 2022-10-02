@@ -1,5 +1,5 @@
 import Routing from "fos-router";
-import {Calendar} from "./calendar";
+import {Calendar} from "./Calendar";
 
 export default class Modal {
     constructor(id) {
