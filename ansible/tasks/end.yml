@@ -6,3 +6,13 @@
     shell: bin/console doctrine:migration:migrate -n
     args:
         chdir: "{{ ansistrano_release_path.stdout }}"
+-   name: Symfony scheduler | Add cron
+    cron:
+        name: "Frigodons scheduler"
+        minute: "*"
+        hour: "*"
+        day: "*"
+        month: "*"
+        weekday: "*"
+        job: "cd {{ ansistrano_release_path.stdout }} && php bin/console schedule:run >> /dev/null 2>&1"
+        state: present
