@@ -1,0 +1,4 @@
+-   name: NPM | Run Build
+    command: npm run build
+    args:
+        chdir: "{{ ansistrano_release_path.stdout }}"

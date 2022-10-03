@@ -1,0 +1,8 @@
+-   name: Symfony | Cache clear
+    shell: bin/console cache:clear
+    args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
+-   name: Symfony | Doctrine migrate
+    shell: bin/console doctrine:migration:migrate -n
+    args:
+        chdir: "{{ ansistrano_release_path.stdout }}"
