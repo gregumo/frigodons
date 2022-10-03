@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Repository\CleaningDateRepository;
 use App\Repository\SupervisingDateRepository;
-use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -25,7 +24,7 @@ class ContentController extends AbstractController
         return $this->render('content/volunteer_guide.html.twig');
     }
     #[Route('/email', name: 'email')]
-    public function email(UserRepository $userRepo, CleaningDateRepository $cleaningDateRepo, SupervisingDateRepository $supervisingDateRepo, Environment $twig, MailerInterface $mailer): Response
+    public function email(CleaningDateRepository $cleaningDateRepo, SupervisingDateRepository $supervisingDateRepo, Environment $twig, MailerInterface $mailer): Response
     {
         $user = $this->getUser();
 
