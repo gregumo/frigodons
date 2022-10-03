@@ -67,10 +67,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $supervisingDates;
 
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
-    private bool $callbackMailOptIn;
+    private bool $callbackMailOptIn = false;
 
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
-    private bool $missingVolunteerMailOptIn;
+    private bool $missingVolunteerMailOptIn = false;
 
     public function __construct()
     {
