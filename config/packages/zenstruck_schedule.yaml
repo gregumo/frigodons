@@ -1,0 +1,6 @@
+zenstruck_schedule:
+    mailer:
+        service: mailer
+        default_to: gregoire.humeau@gmail.com
+        default_from: nepasrepondre@frigodons.com
+        subject_prefix: "[Frigodons Scheduler]"
