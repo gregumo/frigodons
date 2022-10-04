@@ -14,7 +14,8 @@ class CallbackMailSchedule implements ScheduleBuilder
             ->environments('production')
         ;
 
-        $schedule->addCommand('app:callback-mail >> ~/frigodons_logs/callback_mail.log 2>&1')
+        $schedule->addCommand('app:callback-mail')
+            ->arguments('>>', '~/frigodons_logs/callback_mail.log', '2>&1')
             ->everyFiveMinutes()
             //->sundays()
             //->at(6)
