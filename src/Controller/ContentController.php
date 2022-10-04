@@ -6,6 +6,7 @@ use App\Repository\CleaningDateRepository;
 use App\Repository\SupervisingDateRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
@@ -33,9 +34,11 @@ class ContentController extends AbstractController
         if(!empty($cleaningDates) || !empty($supervisingDates)) {
             $userAndDates = compact('user', 'cleaningDates', 'supervisingDates');
         }
-
+        $from = new Address($this->getParameter('app.mail_from'), $this->getParameter('app.mail_from_name'));
+        $replyTo = new Address($this->getParameter('app.mail_reply_to'), $this->getParameter('app.mail_reply_to_name'));
         $email = (new Email())
-            ->from('lacordee4@protonmail.com')
+            ->from($from)
+            ->replyTo($replyTo)
             ->to('gregoire.humeau@gmail.com')
             ->subject('Test de sujet')
             ->html($twig->render('mail/callback.html.twig', $userAndDates));
