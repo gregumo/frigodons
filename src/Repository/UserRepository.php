@@ -57,11 +57,11 @@ class UserRepository extends ServiceEntityRepository
     private function getUserQbForRole(string $role): QueryBuilder
     {
         return $this->createQueryBuilder('u')
-            ->select('u.firstname', 'u.lastname', 'u.email', 'u.phone', 'u.callbackMailOptIn', 'u.missingVolunteerMailOptIn')
+            ->select('UNACCENT(u.firstname) as unaccent_firstname', 'UNACCENT(u.lastname) as unaccent_lastname', 'u.firstname', 'u.lastname', 'u.email', 'u.phone', 'u.callbackMailOptIn', 'u.missingVolunteerMailOptIn')
             ->addSelect('(SELECT COUNT(cd) FROM App\Entity\CleaningDate cd WHERE cd.cleaner = u AND cd.day >= :startDate AND cd.day <= :endDate) AS cleaningCount')
             ->where("JSON_GET_TEXT(u.roles,0) = :role")
-            ->orderBy('u.firstname')
-            ->addOrderBy('u.lastname')
+            ->orderBy('unaccent_firstname')
+            ->addOrderBy('unaccent_lastname')
             ->setParameters([
                 'role' => $role,
                 'startDate' => (new \DateTime())->format('Y') . '-01-01',
