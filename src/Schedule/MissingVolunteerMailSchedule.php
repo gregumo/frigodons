@@ -16,8 +16,9 @@ class MissingVolunteerMailSchedule implements ScheduleBuilder
 
         $schedule->addCommand('app:missing-volunteer-mail')
             ->emailOnFailure('gregoire.humeau@gmail.com')
-            ->sundays()
-            ->at(5)
+            ->everyFiveMinutes()
+//            ->sundays()
+//            ->at(5)
         ;
     }
 }
