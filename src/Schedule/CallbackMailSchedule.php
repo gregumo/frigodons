@@ -11,7 +11,7 @@ class CallbackMailSchedule implements ScheduleBuilder
     {
         $schedule
             ->timezone('UTC')
-            ->environments('prod')
+            ->environments('production')
         ;
 
         $schedule->addCommand('app:callback-mail')

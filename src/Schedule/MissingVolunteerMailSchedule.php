@@ -11,7 +11,7 @@ class MissingVolunteerMailSchedule implements ScheduleBuilder
     {
         $schedule
             ->timezone('UTC')
-            ->environments('prod')
+            ->environments('production')
         ;
 
         $schedule->addCommand('app:missing-volunteer-mail')
