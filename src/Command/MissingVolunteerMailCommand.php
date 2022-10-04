@@ -82,8 +82,8 @@ class MissingVolunteerMailCommand extends Command
             $mailData['user'] = $user;
             $recipients[] = $user->getEmail();
             $email = (new Email())
-                ->from($this->params->get('app.mail_from'))
-                ->replyTo($this->params->get('app.mail_reply_to'))
+                ->from([$this->params->get('app.mail_from') => $this->params->get('app.mail_from_name')])
+                ->replyTo([$this->params->get('app.mail_reply_to') => $this->params->get('app.mail_reply_to_name')])
                 ->to($user->getEmail())
                 ->subject($this->translator->trans('missing_volunteer.title', [
                     'userType' => $user->isManager() ? 'manager' : 'volunteer',

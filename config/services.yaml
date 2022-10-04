@@ -5,7 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.mail_from: '%env(resolve:APP_MAIL_FROM)%'
+    app.mail_from_name: '%env(resolve:APP_MAIL_FROM_NAME)%'
     app.mail_reply_to: '%env(resolve:APP_MAIL_REPLY_TO)%'
+    app.mail_reply_to_name: '%env(resolve:APP_MAIL_REPLY_TO_NAME)%'
 
 services:
     # default configuration for services in *this* file

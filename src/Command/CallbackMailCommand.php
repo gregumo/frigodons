@@ -69,8 +69,8 @@ class CallbackMailCommand extends Command
         foreach ($usersAndDates as $mailData) {
             $recipients[] = $recipient = $mailData['user']->getEmail();
             $email = (new Email())
-                ->from($this->params->get('app.mail_from'))
-                ->replyTo($this->params->get('app.mail_reply_to'))
+                ->from([$this->params->get('app.mail_from') => $this->params->get('app.mail_from_name')])
+                ->replyTo([$this->params->get('app.mail_reply_to') => $this->params->get('app.mail_reply_to_name')])
                 ->to($recipient)
                 ->subject($this->translator->trans('callback.title', [
                     'cleaningCount' => count($mailData['cleaningDates']),
