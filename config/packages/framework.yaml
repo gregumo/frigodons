@@ -18,6 +18,10 @@ framework:
     php_errors:
         log: true
 
+    assets:
+        base_urls:
+            - '%env(BASE_URL)%'
+
 when@test:
     framework:
         test: true
