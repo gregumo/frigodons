@@ -6,6 +6,10 @@
     shell: bin/console doctrine:migration:migrate -n
     args:
         chdir: "{{ ansistrano_release_path.stdout }}"
+-   name: Symfony | Create scheduler backup log directory
+    file:
+        path: "~/frigodons_logs"
+        state: directory
 -   name: Symfony scheduler | Add cron
     cron:
         name: "Frigodons scheduler"
@@ -14,5 +18,5 @@
         day: "*"
         month: "*"
         weekday: "*"
-        job: "cd {{ ansistrano_release_path.stdout }} && php bin/console schedule:run >> /dev/null 2>&1"
+        job: "cd {{ ansistrano_release_path.stdout }} && php bin/console schedule:run 2>> ~/frigodons_logs/scheduler.bak.log"
         state: present

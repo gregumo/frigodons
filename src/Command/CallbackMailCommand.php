@@ -70,6 +70,7 @@ class CallbackMailCommand extends Command
             $recipients[] = $recipient = $mailData['user']->getEmail();
             $email = (new Email())
                 ->from($this->params->get('app.mail_from'))
+                ->replyTo($this->params->get('app.mail_reply_to'))
                 ->to($recipient)
                 ->subject($this->translator->trans('callback.title', [
                     'cleaningCount' => count($mailData['cleaningDates']),
