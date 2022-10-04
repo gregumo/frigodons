@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -81,9 +82,11 @@ class MissingVolunteerMailCommand extends Command
 
             $mailData['user'] = $user;
             $recipients[] = $user->getEmail();
+            $from = new Address($this->params->get('app.mail_from'), $this->params->get('app.mail_from_name'));
+            $replyTo = new Address($this->params->get('app.mail_reply_to'), $this->params->get('app.mail_reply_to_name'));
             $email = (new Email())
-                ->from([$this->params->get('app.mail_from') => $this->params->get('app.mail_from_name')])
-                ->replyTo([$this->params->get('app.mail_reply_to') => $this->params->get('app.mail_reply_to_name')])
+                ->from($from)
+                ->replyTo($replyTo)
                 ->to($user->getEmail())
                 ->subject($this->translator->trans('missing_volunteer.title', [
                     'userType' => $user->isManager() ? 'manager' : 'volunteer',
