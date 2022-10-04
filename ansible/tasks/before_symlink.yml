@@ -13,17 +13,18 @@
     template:
         src: env.j2
         dest: "{{ ansistrano_shared_path }}/.env.local"
-#-   name: Symfony | Setup directory permissions for var/
-#    file:
-#        path: "{{ ansistrano_shared_path }}/{{ item }}"
-#        state: directory
-#        mode: 0777
-#        recurse: true
-#        # We need it because logs are symlinks now
-#        follow: yes
-#    become: true
-#    become_user: root
-#    with_items: "{{ ansistrano_shared_paths }}"
+-   name: Symfony | www-data user ACL
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=www-data etype=user permissions=rwX default=yes state=present"
+    with_items: "{{ ansistrano_shared_paths }}"
+-   name: Symfony | www-data group ACL
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=www-data etype=group permissions=rwX default=yes state=present"
+    with_items: "{{ ansistrano_shared_paths }}"
+-   name: Symfony | frigodons user ACL
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=user permissions=rwX default=yes state=present"
+    with_items: "{{ ansistrano_shared_paths }}"
+-   name: Symfony | frigondons group ACL
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=group permissions=rwX default=yes state=present"
+    with_items: "{{ ansistrano_shared_paths }}"
 -   name: NPM | Install packages
     npm:
         path: "{{ ansistrano_release_path.stdout }}"
