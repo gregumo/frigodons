@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -68,9 +69,11 @@ class CallbackMailCommand extends Command
         $recipients = [];
         foreach ($usersAndDates as $mailData) {
             $recipients[] = $recipient = $mailData['user']->getEmail();
+            $from = new Address($this->params->get('app.mail_from'), $this->params->get('app.mail_from_name'));
+            $replyTo = new Address($this->params->get('app.mail_reply_to'), $this->params->get('app.mail_reply_to_name'));
             $email = (new Email())
-                ->from([$this->params->get('app.mail_from') => $this->params->get('app.mail_from_name')])
-                ->replyTo([$this->params->get('app.mail_reply_to') => $this->params->get('app.mail_reply_to_name')])
+                ->from($from)
+                ->replyTo($replyTo)
                 ->to($recipient)
                 ->subject($this->translator->trans('callback.title', [
                     'cleaningCount' => count($mailData['cleaningDates']),

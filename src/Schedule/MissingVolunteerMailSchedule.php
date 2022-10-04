@@ -14,7 +14,8 @@ class MissingVolunteerMailSchedule implements ScheduleBuilder
             ->environments('production')
         ;
 
-        $schedule->addCommand('app:missing-volunteer-mail >> ~/frigodons_logs/missing_volunteer_mail.log 2>&1')
+        $schedule->addCommand('app:missing-volunteer-mail')
+            ->emailOnFailure('gregoire.humeau@gmail.com')
             ->sundays()
             ->at(5)
         ;
