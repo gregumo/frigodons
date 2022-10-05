@@ -40,9 +40,7 @@ class ContentController extends AbstractController
 
         $cleaningDates = $cleaningDateRepo->getNextWeekDatesForUser($user);
         $supervisingDates = $user->isManager() ? $supervisingDateRepo->getNextWeekDatesForUser($user) : [];
-        if (!empty($cleaningDates) || !empty($supervisingDates)) {
-            $userAndDates = compact('user', 'cleaningDates', 'supervisingDates');
-        }
+        $userAndDates = compact('user', 'cleaningDates', 'supervisingDates');
         $from = new Address($this->getParameter('app.mail_from'), $this->getParameter('app.mail_from_name'));
         $replyTo = new Address($this->getParameter('app.mail_reply_to'), $this->getParameter('app.mail_reply_to_name'));
         $email = (new Email())
