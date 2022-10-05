@@ -7,6 +7,12 @@
           background: #EDCE71;
           border-bottom: 10px solid #E0C269;
       }
+
+      .btn {
+          background-color: #EDCE71;
+          border: 2px solid #E0C269;
+          color: #725E25;
+      }
   </style>
 
   <p>Bonjour {{ user.firstname }},</p>
@@ -32,6 +38,9 @@
       {% endfor %}
     </ul>
   {% endif %}
+  <p class="text-center">
+    <a class="btn" href="{{ absolute_url(path('app_calendar')) }}">Voir le calendrier</a>
+  </p>
 
 {% endblock %}
 

@@ -4,6 +4,7 @@
           background-color: #F2F0F0;
           font-family: Arial, system-ui, sans-serif;
           padding:20px;
+          line-height: 1.3em;
       }
 
       .container {
@@ -47,6 +48,26 @@
           padding: 2px 0;
       }
 
+      .text-center {
+          text-align: center;
+      }
+
+      .btn {
+          background-color: #8086DD;
+          border: 2px solid #686DB7;
+          color: #ffffff;
+          padding: 12px 15px;
+          border-radius: 10px;
+          text-decoration: none;
+          display:inline-block;
+          margin: 1em 0;
+          line-height: 1em;
+          font-weight: bold;
+      }
+
+      p {
+          margin: 1.5em 0;
+      }
   </style>
 
   <div class="container">
@@ -59,8 +80,6 @@
 
     <div class="content">
       {% block content %}{% endblock %}
-
-      <br/>
       <p>Toute l'équipe de La Cordée vous remercie pour votre aide !</p>
     </div>
 
