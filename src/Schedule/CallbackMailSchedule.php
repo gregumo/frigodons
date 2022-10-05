@@ -16,8 +16,9 @@ class CallbackMailSchedule implements ScheduleBuilder
 
         $schedule->addCommand('app:callback-mail')
             ->emailOnFailure('gregoire.humeau@gmail.com')
-            ->sundays()
-            ->at(6)
+            ->everyFiveMinutes()
+//            ->sundays()
+//            ->at(6)
         ;
     }
 }
