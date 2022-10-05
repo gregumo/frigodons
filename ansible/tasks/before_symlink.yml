@@ -22,7 +22,7 @@
 -   name: Symfony | frigodons user ACL
     acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=user permissions=rwX default=yes state=present"
     with_items: "{{ ansistrano_shared_paths }}"
--   name: Symfony | frigondons group ACL
+-   name: Symfony | frigodons group ACL
     acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=group permissions=rwX default=yes state=present"
     with_items: "{{ ansistrano_shared_paths }}"
 -   name: NPM | Install packages
