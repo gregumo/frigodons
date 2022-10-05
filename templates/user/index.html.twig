@@ -1,4 +1,4 @@
-{% extends 'base_content.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% set nbYearDate = nbYearDate() %}
 {% set cleanersMustDo = (nbYearDate/(volunteers|length + managers|length))|round %}

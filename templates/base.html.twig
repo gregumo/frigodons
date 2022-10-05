@@ -1,3 +1,4 @@
+{% set containerDiv = true %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,7 +23,9 @@
     </head>
     <body class="text-black bg-beige">
         {% include 'part/nav.html.twig' %}
+        {% if containerDiv %}<div class="container mx-auto mt-5 mb-10 px-5">{% endif %}
         {% block body %}{% endblock %}
+        {% if containerDiv %}</div>{% endif %}
         {% include 'part/dialog_modal.html.twig' %}
     </body>
 </html>
