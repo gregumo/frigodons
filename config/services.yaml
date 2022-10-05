@@ -8,6 +8,9 @@ parameters:
     app.mail_from_name: '%env(resolve:APP_MAIL_FROM_NAME)%'
     app.mail_reply_to: '%env(resolve:APP_MAIL_REPLY_TO)%'
     app.mail_reply_to_name: '%env(resolve:APP_MAIL_REPLY_TO_NAME)%'
+    router.request_context.scheme: '%env(resolve:APP_SCHEME)%'
+    router.request_context.host: '%env(resolve:APP_HOST)%'
+    router.request_context.base_url: '%env(resolve:APP_BASE_URL)%'
 
 services:
     # default configuration for services in *this* file
