@@ -54,7 +54,18 @@
     ul {
         list-style-position: inside;
     }
-
+    .calendar-table th, .calendar-table td {
+        border: 1px solid #e5e7eb;
+    }
+    td.cleaning-date-today, td.supervising-date-today {
+        border: 2px solid crimson;
+    }
+    td.cleaning-date-today{
+        border-bottom: 0px;
+    }
+    td.supervising-date-today{
+        border-top: 0px;
+    }
 }
 
 @screen md {

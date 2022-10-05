@@ -25,11 +25,11 @@ data-year="{{ currentYear }}"
       </button>
     </div>
   </div>
-  <table class="w-full">
+  <table class="calendar-table w-full">
     <thead>
     <tr>
       {% for day in frenchDays %}
-        <th class="p-2 border-r h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
+        <th class="p-2 h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 xl:text-sm text-xs">
           <span class="xl:block lg:block md:block sm:block hidden">{{ day }}</span>
           <span class="xl:hidden lg:hidden md:hidden sm:hidden block">{{ day|slice(0, 2) }}</span>
         </th>
@@ -47,9 +47,9 @@ data-year="{{ currentYear }}"
           {% set day = calendarDays[loop.index - 1 + (loop.parent.loop.index -1) * 7] %}
           {% set date = cleaningDates[day] %}
           <td
-                  class="border-2 p-1 h-20 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition duration-300 ease
+                  class="p-1 h-20 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition duration-300 ease
                                 {% if day == 'now'|date('Y-m-d') %}
-                                    border-red-600 border-double
+                                    cleaning-date-today
                                 {% endif %}
                                 {% if date.modal %}
                                     cursor-pointer
@@ -102,11 +102,14 @@ data-year="{{ currentYear }}"
         {% for weekDay in 1..7 %}
           {% set day = calendarDays[loop.index - 1 + (loop.parent.loop.index -1) * 7] %}
           {% set date = supervisingDates[day] %}
-          <td class="border p-1 h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto bg-stone-300
-                                {% if date.modal %}
-                                    hover:bg-gray-300 cursor-pointer
-                                {% endif %}
-                            ">
+          <td class="p-1 h-10 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto bg-stone-300
+                {% if day == 'now'|date('Y-m-d') %}
+                    supervising-date-today
+                {% endif %}
+                {% if date.modal %}
+                    hover:bg-gray-300 cursor-pointer
+                {% endif %}
+            ">
             <div class="dayCell flex flex-col h-10 mx-auto xl:w-40 lg:w-30 md:w-30 sm:w-full w-10 mx-auto overflow-hidden"
                  data-day="{{ day }}"
                  data-modal="{{ date.modal }}"
