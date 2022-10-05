@@ -36,6 +36,9 @@
         padding:0 0 0.6em 0;
         margin-top: 2em;
     }
+    p {
+        padding: 0.1em 0;
+    }
     h3:first-of-type {
         margin-top: 0;
     }
@@ -50,6 +53,9 @@
     }
     #dialogModal .participationH3{
         display:none;
+    }
+    #dialogModal p.mt-4{
+        margin-top:1em;
     }
     ul {
         list-style-position: inside;
