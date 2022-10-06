@@ -60,7 +60,8 @@
         </button>
       </div>
 
-      <div class="hidden mobile-menu h-screen absolute top-0 right-0 bg-purple shadow-xl">
+      <div id="mobileMenuBackdrop" class="hidden opacity-40 fixed inset-0 z-40 bg-black"></div>
+      <div id="mobileMenu" class="hidden h-screen absolute top-0 right-0 z-50 bg-purple shadow-xl">
         {% for pathName, item in items %}
           {% if item.anonymous or app.user %}
             {% if item.managerOnly is not defined or is_granted('ROLE_MANAGER') %}
@@ -81,8 +82,14 @@
 </nav>
 <script>
     const btn = document.querySelector('button.menu-button');
-    const menu = document.querySelector(".mobile-menu");
+    const menu = document.getElementById('mobileMenu');
+    const backdrop = document.getElementById('mobileMenuBackdrop');
     btn.addEventListener("click", () => {
         menu.classList.toggle("hidden");
+        backdrop.classList.toggle("hidden");
+    })
+    backdrop.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+        backdrop.classList.toggle("hidden");
     })
 </script>
