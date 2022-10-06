@@ -42,6 +42,9 @@
     h3:first-of-type {
         margin-top: 0;
     }
+    nav, nav .logo-text{
+        height:64px;
+    }
     nav .logo{
         font-family: Chelsea Market, system-ui, sans-serif;
         font-size: theme('fontSize.xl');
@@ -50,6 +53,9 @@
     }
     nav .logo img{
         height: 40px;
+    }
+    nav .menu-link{
+        transition-property: background-color;
     }
     #dialogModal h1{
         padding:0;

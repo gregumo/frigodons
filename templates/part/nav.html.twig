@@ -4,7 +4,7 @@
     'anonymous': true,
   },
   'app_calendar' : {
-    'text': 'Planning des bénévoles',
+    'text': 'Planning bénévoles',
     'anonymous': true,
   },
   'app_user_index' : {
@@ -13,7 +13,7 @@
     'managerOnly': true,
   },
   'app_user_edit' : {
-    'text': 'Mes informations',
+    'text': 'Mes infos',
     'anonymous': false,
   },
   'app_logout' : {
@@ -22,21 +22,24 @@
   }
 } %}
 
+{% set hidden_break = app.user ? 'lg:hidden' : 'md:hidden' %}
+{% set flex_break = app.user ? 'lg:flex' : 'md:flex' %}
+
 <nav class="bg-purple border-gray-200 rounded text-white">
   <div class="container mx-auto">
     <div class="flex justify-between px-4">
-      <div class="flex space-x-7">
+      <div class="logo-text flex space-x-7">
         <a href="{{ path('app_content_home') }}" class="flex items-center px-2 logo">
           <img class="nav-logo mr-3" src="{{ asset('img/menu_logo.png') }}" alt="Frig'o dons">
           <span class="inline-block">Frig'o dons</span>
         </a>
       </div>
-      <div class="hidden md:flex items-center">
+      <div class="hidden {{ flex_break }} items-center">
         {% for pathName, item in items %}
           {% if item.anonymous or app.user %}
             {% if item.managerOnly is not defined or is_granted('ROLE_MANAGER') %}
               <a href="{{ path(pathName) }}"
-                 class="align-middle py-5 h-18 px-4 hover:bg-purple-600 transition duration-200 ease
+                 class="menu-link align-middle py-5 h-18 px-4 hover:bg-purple-600 duration-500
               {% if path(pathName) == path(app.request.attributes.get('_route')) %}
                 bg-beige text-black hover:bg-beige
               {% endif %}
@@ -48,7 +51,7 @@
         {% endfor %}
       </div>
 
-      <div class="md:hidden flex items-center">
+      <div class="{{ hidden_break }} flex items-center">
         <button class="outline-none menu-button">
           <svg class="w-6 h-6" x-show="! showMenu" fill="none" stroke-linecap="round"
                stroke-linejoin="round" stroke-width="2" viewBox="0 00 24 24" stroke="currentColor">
