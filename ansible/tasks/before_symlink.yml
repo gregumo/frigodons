@@ -1,3 +1,11 @@
+-   name: ACL | User folder | www-data user
+    acl: "name=/home/{{ user }} entity=www-data etype=user permissions=r-x state=present"
+-   name: ACL | User folder | www-data group
+    acl: "name=/home/{{ user }} entity=www-data etype=group permissions=r-x state=present"
+-   name: ACL | Deploy folder | www-data user
+    acl: "name={{ ansistrano_deploy_to }} entity=www-data etype=user permissions=r-x recursive=true default=yes state=present"
+-   name: ACL | Deploy folder | www-data group
+    acl: "name={{ ansistrano_deploy_to }} entity=www-data etype=group permissions=r-x recursive=true default=yes state=present"
 -   name: Symfony | Composer install
     composer:
         command: install
@@ -8,17 +16,17 @@
     template:
         src: env.j2
         dest: "{{ ansistrano_shared_path }}/.env.local"
--   name: Symfony | www-data user ACL
-    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=www-data etype=user permissions=rwX default=yes state=present"
+-   name: ACL | Symfony var folder | www-data user
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=www-data etype=user permissions=rwx default=yes state=present"
     with_items: "{{ ansistrano_shared_paths }}"
--   name: Symfony | www-data group ACL
-    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=www-data etype=group permissions=rwX default=yes state=present"
+-   name: ACL | Symfony var folder | www-data group
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=www-data etype=group permissions=rwx default=yes state=present"
     with_items: "{{ ansistrano_shared_paths }}"
--   name: Symfony | frigodons user ACL
-    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=user permissions=rwX default=yes state=present"
+-   name: ACL | Symfony var folder | frigodons user
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=user permissions=rwx default=yes state=present"
     with_items: "{{ ansistrano_shared_paths }}"
--   name: Symfony | frigodons group ACL
-    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=group permissions=rwX default=yes state=present"
+-   name: ACL | Symfony var folder | frigodons group
+    acl: "name={{ ansistrano_shared_path }}/{{ item }} entity=frigodons etype=group permissions=rwx default=yes state=present"
     with_items: "{{ ansistrano_shared_paths }}"
 -   name: NPM | Install packages
     npm:
