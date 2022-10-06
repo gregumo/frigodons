@@ -10,3 +10,4 @@ ansistrano_shared_files: [".env.local"]
 ansistrano_before_symlink_shared_tasks_file: "{{ playbook_dir }}/tasks/before_symlink.yml"
 ansistrano_after_symlink_shared_tasks_file: "{{ playbook_dir }}/tasks/after_symlink.yml"
 ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/tasks/end.yml"
+ansistrano_rollback_after_symlink_tasks_file: "{{ playbook_dir }}/tasks/end.yml"

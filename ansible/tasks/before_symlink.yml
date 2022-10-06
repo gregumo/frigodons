@@ -1,8 +1,3 @@
-#-   name: Fix Ansistrano folders permissions
-#    file:
-#        dest: "{{ ansistrano_deploy_to }}"
-#        mode: +x
-#        recurse: true
 -   name: Symfony | Composer install
     composer:
         command: install
