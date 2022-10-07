@@ -5,20 +5,20 @@ data-month="{{ currentMonth }}"
 data-year="{{ currentYear }}"
 >
   <div class="header flex justify-between border-b p-2">
-                <span class="text-lg font-bold">
+                <span class="text-xl font-bold">
                   {{ frMonthDate }}
                 </span>
     <div class="buttons">
       <button class="p-1">
         <a href="{{ path('app_calendar', {'month' : previousMonth, 'year' : previousMonthYear}) }}">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
             <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
           </svg>
         </a>
       </button>
       <button class="p-1">
         <a href="{{ path('app_calendar', {'month' : nextMonth, 'year' : nextMonthYear}) }}">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
             <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
           </svg>
         </a>
@@ -87,9 +87,10 @@ data-year="{{ currentYear }}"
                       {% endif %}
                   ">{{ day|date('j') }}</span>
               </div>
-              <div class="bottom flex-grow h-20 py-1 w-full text-white p-1 md:text-sm text-xs mt-3">
+              <div class="bottom flex-grow h-20 w-full text-white md:p-1 md:text-sm text-xs mt-3">
                 {% if date.user is not null %}
-                  {{ date.user.fullName }}
+                  <span class="hidden md:inline-block">{{ date.user.fullName }}</span>
+                  <span class="md:hidden inline-block">{{ date.user.firstname }} {{ date.user.lastname|first }}.</span>
                 {% endif %}
               </div>
             </div>
@@ -124,11 +125,12 @@ data-year="{{ currentYear }}"
                  data-user="{{ date.user is not null ? date.user.id : '' }}"
                  data-context="supervising"
             >
-              <div class="flex-grow h-10 py-1 w-full text-sm mt-1
+              <div class="flex-grow h-10 md:py-1 w-full lg:text-sm text-xs lg:mt-1
               {% if date.modal %}text-black {% else %}text-black-200 {% endif %}
             ">
                 {% if date.user is not null %}
-                  {{ date.user.fullName }}
+                  <span class="hidden md:inline-block">{{ date.user.fullName }}</span>
+                  <span class="md:hidden inline-block">{{ date.user.firstname }} {{ date.user.lastname|first }}.</span>
                 {% endif %}
               </div>
             </div>
