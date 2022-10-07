@@ -52,7 +52,7 @@
       </div>
 
       <div class="{{ hidden_break }} flex items-center">
-        <button class="outline-none menu-button">
+        <button id="mobileMenuOpen" class="outline-none menu-button">
           <svg class="w-6 h-6" x-show="! showMenu" fill="none" stroke-linecap="round"
                stroke-linejoin="round" stroke-width="2" viewBox="0 00 24 24" stroke="currentColor">
             <path d="m4 6h16M4 12h16M4 18h16"></path>
@@ -62,11 +62,19 @@
 
       <div id="mobileMenuBackdrop" class="hidden opacity-40 fixed inset-0 z-40 bg-black"></div>
       <div id="mobileMenu" class="hidden h-screen absolute top-0 right-0 z-50 bg-purple shadow-xl">
+        <div class="text-right pt-4 pr-4 h-16">
+          <button id="mobileMenuClose" class="outline-none menu-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+          </button>
+        </div>
         {% for pathName, item in items %}
           {% if item.anonymous or app.user %}
             {% if item.managerOnly is not defined or is_granted('ROLE_MANAGER') %}
               <a href="{{ path(pathName) }}"
-                 class="block py-5 h-18 px-4 hover:bg-purple-600 duration-500
+                 class="block py-5 h-14 px-4 hover:bg-purple-600 duration-500
               {% if path(pathName) == path(app.request.attributes.get('_route')) %}
                 bg-beige text-black hover:bg-beige
               {% endif %}
@@ -81,15 +89,20 @@
   </div>
 </nav>
 <script>
-    const btn = document.querySelector('button.menu-button');
+    const open = document.getElementById('mobileMenuOpen');
     const menu = document.getElementById('mobileMenu');
     const backdrop = document.getElementById('mobileMenuBackdrop');
-    btn.addEventListener("click", () => {
+    const close = document.getElementById('mobileMenuClose');
+    open.addEventListener("click", () => {
         menu.classList.toggle("hidden");
         backdrop.classList.toggle("hidden");
-    })
+    });
     backdrop.addEventListener("click", () => {
         menu.classList.toggle("hidden");
         backdrop.classList.toggle("hidden");
-    })
+    });
+    close.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+        backdrop.classList.toggle("hidden");
+    });
 </script>
