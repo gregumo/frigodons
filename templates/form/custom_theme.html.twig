@@ -35,10 +35,10 @@
 {%- endblock form_errors -%}
 
 {%- block checkbox_widget -%}
-  <label for="{{ name }}" class="my-2 inline-flex relative items-center cursor-pointer">
+  <label for="{{ name }}" class="my-2 inline-flex relative cursor-pointer">
     <input type="checkbox" id="{{ name }}"
            class="sr-only peer" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+    <div class="min-w-[44px] h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
     <span class="ml-3">
       {{ label }}
       {% if help is defined %}

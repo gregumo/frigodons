@@ -25,16 +25,16 @@ modal:
         title: Contacter {gender, select, m {le} other {la}} responsable
         content: >-
             {gender, select,
-              m {Le responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez le contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
-              other {La responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez la contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
+              m {Le responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez le contacter :<br/><li>par téléphone au <b><a href="tel:{phone}">{phone}</a></b></li><li>par mail à l'adresse <b><a href="mailto:{email}">{email}</a></b></li>}
+              other {La responsable du {date} est <b>{fullName}</b>.<br/>Vous pouvez la contacter :<br/><li>par téléphone au <b><a href="tel:{phone}">{phone}</a></b></li><li>par mail à l'adresse <b><a href="mailto:{email}">{email}</a></b></li>}
             }
         closeBtn: Fermer
     cleaner_contact:
         title: Contacter {gender, select, m {le} other {la}} bénévole
         content: >-
             {gender, select,
-              m {Le bénévole du {date} est <b>{fullName}</b>.<br/>Vous pouvez le contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
-              other {La bénévole du {date} est <b>{fullName}</b>.<br/>Vous pouvez la contacter :<br/><li>par téléphone au <b>{phone}</b></li><li>par mail à l'adresse <b>{email}</b></li>}
+              m {Le bénévole du {date} est <b>{fullName}</b>.<br/>Vous pouvez le contacter :<br/><li>par téléphone au <b><a href="tel:{phone}">{phone}</a></b></li><li>par mail à l'adresse <b><a href="mailto:{email}">{email}</a></b></li>}
+              other {La bénévole du {date} est <b>{fullName}</b>.<br/>Vous pouvez la contacter :<br/><li>par téléphone au <b><a href="tel:{phone}">{phone}</a></b></li><li>par mail à l'adresse <b><a href="mailto:{email}">{email}</a></b></li>}
             }
         closeBtn: Fermer
 badge:
