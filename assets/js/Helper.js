@@ -47,15 +47,19 @@ export default class Helper {
         let tooltip = document.getElementById(icon.getAttribute('data-tooltip-target'));
         let windowWidth = window.innerWidth;
         let tooltipWidth = tooltip.offsetWidth;
+        let tooltipHeight = tooltip.offsetHeight;
         let iconLeft = icon.getBoundingClientRect().left;
+        let iconTop = icon.getBoundingClientRect().top;
         let iconWidth = icon.offsetWidth;
 
-        if(iconLeft + tooltipWidth > windowWidth) {
+        if(iconLeft + tooltipWidth < windowWidth) {
+            tooltip.style.left = icon.offsetLeft + 'px';
+        } else if(iconLeft - tooltipWidth > 0) {
             tooltip.style.left = (icon.offsetLeft - tooltipWidth + iconWidth) + 'px';
         } else {
-            tooltip.style.left = icon.offsetLeft + 'px';
+            tooltip.style.left = '20px';
         }
-        tooltip.style.bottom = '30px';
+        tooltip.style.top = (iconTop - tooltipHeight - 5) + 'px';
         tooltip.classList.remove('invisible');
     }
 
