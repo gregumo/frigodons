@@ -2,11 +2,27 @@
 {% set containerDiv = false %}
 
 {% block body %}
-  <div class="grid h-[calc(100vh-132px)] place-items-center text-center home">
-    <div>
-      <img class="mx-auto w-4/12" src="{{ asset('img/Frigodons.png') }}" alt="Frig'o dons">
-      <h1>Frig'o dons</h1>
-      <h2 class="origin-top-left rotate-6" >Ne jetez plus, partagez !</h2>
+  <div class="grid lg:h-[calc(100vh-124px)] home pb-20 lg:pb-0">
+    <div class="lg:flex flex-row lg:space-x-16">
+      <div class="flex text-center mt-8 lg:mt-0 lg:basis-1/3">
+        <div class="m-auto">
+          <img class="mx-auto w-2/12 lg:w-3/12" src="{{ asset('img/Frigodons.png') }}" alt="Frig'o dons">
+          <h1 class="lg:hidden pb-0">Frig'o dons</h1>
+          <h2 class="lg:hidden origin-top-left rotate-2 mb-6 text-md">Ne jetez plus, partagez !</h2>
+          <p class="mt-8">Le Frig'o dons est un espace libre de collectes et de dons de produits alimentaires frais et
+            secs, mis à
+            disposition de tous les habitants de La Montagne</p>
+          <p class="mt-12">Son objectif est de<br/>
+            <span class="inline-block mt-2 bg-purple-600 text-white mr-2 px-2.5 py-0.5 rounded rotate-2">lutter contre le gaspillage alimentaire</span><br/>
+            <span class="inline-block mt-2 bg-purple-600 text-white mr-2 px-2.5 py-0.5 rounded">participer à la solidarité locale</span><br/>
+            <span class="inline-block mt-2 bg-purple-600 text-white mr-2 px-2.5 py-0.5 rounded -rotate-2">être un lieu de partage et de rencontre</span><br/>
+          </p>
+        </div>
+      </div>
+      <div class="flex h-5/6 mt-20 lg:mt-0 lg:h-auto lg:basis-2/3 bg-no-repeat bg-contain bg-center"
+           style="background-image: url('{{ asset('img/flyer-recto.jpg') }}');">
+
+      </div>
     </div>
   </div>
 {% endblock %}

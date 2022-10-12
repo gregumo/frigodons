@@ -38,5 +38,8 @@ module.exports = {
       '7xl': '5rem',
     }
   },
+  backgroundImage: {
+    'flyer': "url('../img/flyer-recto.jpg')",
+  },
   plugins: [],
 }

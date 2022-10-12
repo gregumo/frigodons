@@ -20,10 +20,10 @@ class ContentController extends AbstractController
         return $this->render('content/home.html.twig');
     }
 
-    #[Route('/guide-du-benevole', name: 'app_content_volunteer')]
+    #[Route('/devenir-benevole', name: 'app_content_volunteer')]
     public function index(): Response
     {
-        return $this->render('content/volunteer_guide.html.twig');
+        return $this->render('content/became_volunteer.html.twig');
     }
 
     #[Route('/email1/{sendMail}', name: 'email1')]
