@@ -14,6 +14,12 @@
         padding:0 0 0.4em 0;
         text-transform: uppercase;
     }
+    .chelsea {
+        font-family: Chelsea Market, system-ui, sans-serif;
+    }
+    .oswald {
+        font-family: Oswald, system-ui, sans-serif;
+    }
     .home h1 {
         font-family: Chelsea Market, system-ui, sans-serif;
         font-size: theme('fontSize.4xl');

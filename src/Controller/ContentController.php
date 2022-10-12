@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\CleaningDateRepository;
 use App\Repository\SupervisingDateRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -15,15 +16,17 @@ use Twig\Environment;
 class ContentController extends AbstractController
 {
     #[Route('/', name: 'app_content_home')]
-    public function home(): Response
+    public function home(UserRepository $userRepo): Response
     {
-        return $this->render('content/home.html.twig');
+        return $this->render('content/home.html.twig', );
     }
 
     #[Route('/devenir-benevole', name: 'app_content_volunteer')]
-    public function index(): Response
+    public function became_volunteer(UserRepository $userRepo): Response
     {
-        return $this->render('content/became_volunteer.html.twig');
+        $volunteerCount = count($userRepo->findAll());
+
+        return $this->render('content/became_volunteer.html.twig', compact('volunteerCount'));
     }
 
     #[Route('/email1/{sendMail}', name: 'email1')]
