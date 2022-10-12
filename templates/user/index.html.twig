@@ -1,3 +1,4 @@
+{% import "user/_user_macros.html.twig" as user_macro %}
 {% extends 'base.html.twig' %}
 
 {% set nbYearDate = nbYearDate() %}
@@ -7,6 +8,9 @@
 {% block title %}Annuaire{% endblock %}
 
 {% block body %}
+  <!-- Tailwind colors loading -->
+  <span class="hidden text-red-700 bg-red-100 text-orange-700 bg-orange-100 text-green-700 bg-green-100"></span>
+
   <h1>Annuaire</h1>
   {% set userTypes = {'Responsables': managers, 'Bénévoles': volunteers} %}
 
@@ -36,7 +40,13 @@
       </thead>
       <tbody>
       {% for user in list %}
-        <tr class="even:bg-gray-100 odd:bg-white hover:bg-gray-200 ">
+        <tr class="even:bg-gray-100 odd:bg-white hover:bg-gray-200 cursor-pointer xl:cursor-auto"
+            data-modal="1"
+            data-user="{{ user.id }}"
+            data-title="Informations utilisateur"
+            data-content='{% include "user/_modal.html.twig" with {"isManager" : (title == 'Responsables')} %}'
+            data-closebtn="Fermer"
+        >
           <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200">
             {{ user.firstname }}
           </td>
@@ -45,46 +55,24 @@
             <span class="md:hidden">{{ user.firstname }} {{ user.lastname|first }}.</span>
           </td>
           <td class="hidden xl:table-cell px-5 py-2 border-b border-gray-200">
-            <span class="whitespace-nowrap px-2.5 py-0.5 rounded text-blue-700 bg-blue-100 hover:bg-blue-200 text-center">
-              <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-            </span>
+            {{ user_macro.email(user.email) }}
           </td>
           <td class="hidden lg:table-cell px-5 py-2 border-b border-gray-200">
-            <span class="whitespace-nowrap px-2.5 py-0.5 rounded text-blue-700 bg-blue-100 hover:bg-blue-200 text-center">
-              <a href="tel:{{ user.phone }}">{{ user.phone }}</a>
-            </span>
+            {{ user_macro.phone(user.phone) }}
           </td>
           <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                 class="mx-auto bi bi-circle" viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-              {% if user.callbackMailOptIn %}
-                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-              {% endif %}
-            </svg>
+            {{ user_macro.optIn(user.callbackMailOptIn, 'table') }}
           </td>
           <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                 class="mx-auto bi bi-circle" viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-              {% if user.missingVolunteerMailOptIn %}
-                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-              {% endif %}
-            </svg>
+            {{ user_macro.optIn(user.missingVolunteerMailOptIn, 'table') }}
           </td>
           {% if title == 'Responsables' %}
-            {% set ratio = (user.supervisingCount/supervisorsMustDo)*100 %}
             <td class="px-5 py-2 border-b border-gray-200 text-center">
-              <span class="inline-block mt-2 {{ color_ratio(ratio) }} mr-2 px-2.5 py-0.5 rounded">
-                {{ user.supervisingCount }} / {{ supervisorsMustDo }}
-              </span>
+              {{ user_macro.quota(user.supervisingCount, supervisorsMustDo, 'table') }}
             </td>
           {% endif %}
-          {% set ratio = (user.cleaningCount/cleanersMustDo)*100 %}
           <td class="px-5 py-2 border-b border-gray-200 text-center">
-              <span class="inline-block mt-2 {{ color_ratio(ratio) }} mr-2 px-2.5 py-0.5 rounded text-red-700 bg-red-100">
-                {{ user.cleaningCount }} / {{ cleanersMustDo }}
-              </span>
+              {{ user_macro.quota(user.cleaningCount, cleanersMustDo, 'table') }}
           </td>
         </tr>
       {% endfor %}

@@ -3,6 +3,7 @@ import {Calendar} from "./Calendar";
 
 export default class Modal {
     constructor(id) {
+        this.id = id;
         this.modal = document.getElementById(id);
         this.backdrop = document.getElementById(id + 'Backdrop');
         this.title = this.modal.querySelector('.title');
@@ -21,11 +22,17 @@ export default class Modal {
             });
         }
 
+        this.modal.addEventListener('click', function(e){
+            if(e.target.id === window.dialogModal.id) {
+                window.dialogModal.close();
+            }
+        }, false);
         this.closebtn.addEventListener('click', this.close.bind(this), false);
         this.sendbtn.addEventListener('click', this.send.bind(this), false);
     }
 
     open(data) {
+        console.log(data);
         if (!data.modal) {
             return;
         }

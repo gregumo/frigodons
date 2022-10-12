@@ -4,6 +4,7 @@ import Modal from './Modal';
 import Helper from "./Helper";
 import Nav from "./Nav";
 import { Calendar } from "./Calendar";
+import { UserList } from "./UserList";
 
 const routes = require('./routes.json');
 import Routing from 'fos-router';
@@ -17,4 +18,5 @@ window.onload = (event) => {
     window.nav = new Nav();
     window.nav.init();
     Calendar.init();
+    UserList.init();
 };
