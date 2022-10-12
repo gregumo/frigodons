@@ -22,7 +22,7 @@ class ContentController extends AbstractController
     }
 
     #[Route('/devenir-benevole', name: 'app_content_volunteer')]
-    public function became_volunteer(UserRepository $userRepo): Response
+    public function index(UserRepository $userRepo): Response
     {
         $volunteerCount = count($userRepo->findAll());
 
