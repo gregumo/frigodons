@@ -60,10 +60,10 @@
           <td class="hidden lg:table-cell px-5 py-2 border-b border-gray-200">
             {{ user_macro.phone(user.phone) }}
           </td>
-          <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200">
+          <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200 text-center">
             {{ user_macro.optIn(user.callbackMailOptIn, 'table') }}
           </td>
-          <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200">
+          <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200 text-center">
             {{ user_macro.optIn(user.missingVolunteerMailOptIn, 'table') }}
           </td>
           {% if title == 'Responsables' %}
