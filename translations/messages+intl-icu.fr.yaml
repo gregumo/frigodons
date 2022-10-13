@@ -62,3 +62,15 @@ badge:
             one {1 jour de responsable à venir}
             other {# jours de responsable à venir}
         }
+contact:
+    email:
+        subject: Message de {firstname} {lastname} sur frigodons.org
+        date.label : Date
+    form:
+        success: Votre message a bien été envoyé. Merci !
+    field:
+        firstname.label : Prénom
+        lastname.label : Nom
+        email.label : Adresse e-mail
+        phone.label : Téléphone
+        message.label : Message

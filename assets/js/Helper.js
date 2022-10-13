@@ -1,9 +1,11 @@
 export default class Helper {
     init() {
-        let phoneInput = document.getElementById('user_phone')
-        if (phoneInput) {
-            phoneInput.addEventListener('input', (e) => {
-                window.helper.phoneNumberFormatter(e);
+        let phoneInputs = document.querySelectorAll('input[data-phone-format]');
+        if (phoneInputs) {
+            phoneInputs.forEach((item) => {
+                item.addEventListener('input', (e) => {
+                    window.helper.phoneNumberFormatter(e);
+                });
             });
         }
 
@@ -16,7 +18,7 @@ export default class Helper {
                 item.addEventListener('mouseleave', (e) => {
                     window.helper.hideTooltip(e.target);
                 });
-            })
+            });
         }
     }
 

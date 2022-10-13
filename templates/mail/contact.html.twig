@@ -1,0 +1,13 @@
+{% extends 'mail/_base.html.twig' %}
+{% set footer = false %}
+
+{% block content %}
+<b>{{ 'contact.email.date.label'|trans }} : </b>{{ "now"|date("d/m/Y h:i:s") }}<br/>
+<b>{{ 'contact.field.firstname.label'|trans }} : </b>{{ contact.firstname }}<br/>
+<b>{{ 'contact.field.lastname.label'|trans }} : </b>{{ contact.lastname }}<br/>
+<b>{{ 'contact.field.email.label'|trans }} : </b>{{ contact.email }}<br/>
+{% if contact.phone is not null %}
+  <b>{{ 'contact.field.phone.label'|trans }} : </b>{{ contact.phone }}<br/>
+{% endif %}
+<b>{{ 'contact.field.message.label'|trans }} : </b><br/>{{ contact.message }}<br/>
+{% endblock %}

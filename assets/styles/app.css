@@ -48,6 +48,11 @@
     h3:first-of-type {
         margin-top: 0;
     }
+    .link:hover {
+        text-decoration: underline;
+        color: theme('colors.purple-700');
+        transition: color 0.2s ease;
+    }
     nav, nav .logo-text{
         height:64px;
     }

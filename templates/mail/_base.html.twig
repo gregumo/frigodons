@@ -1,9 +1,11 @@
+{% set footer = true %}
+
 {% apply inline_css %}
   <style>
       body {
           background-color: #F2F0F0;
           font-family: Arial, system-ui, sans-serif;
-          padding:20px;
+          padding: 20px;
           line-height: 1.3em;
       }
 
@@ -20,7 +22,7 @@
           background: #8086DD;
           border-bottom: 10px solid #686DB7;
           padding: 15px;
-          text-align:center;
+          text-align: center;
       }
 
       .content {
@@ -31,20 +33,20 @@
 
       .footer {
           font-style: italic;
-          font-size:0.9em;
+          font-size: 0.9em;
           padding: 0 40px;
           text-align: center;
       }
 
       h2 {
-          font-size:1.2em;
+          font-size: 1.2em;
       }
 
-      a{
+      a {
           color: #5E63B2;
       }
 
-      li{
+      li {
           padding: 2px 0;
       }
 
@@ -59,7 +61,7 @@
           padding: 12px 15px;
           border-radius: 10px;
           text-decoration: none;
-          display:inline-block;
+          display: inline-block;
           margin: 1em 0;
           line-height: 1em;
           font-weight: bold;
@@ -80,13 +82,19 @@
 
     <div class="content">
       {% block content %}{% endblock %}
-      <p>Toute l'équipe de La Cordée vous remercie pour votre aide !</p>
+      {% if footer %}
+        <p>Toute l'équipe de La Cordée vous remercie pour votre aide !</p>
+      {% endif %}
     </div>
 
-    <div class="footer">
-      <p>Si vous ne souhaitez plus recevoir les mails de rappel, <b><a href="{{ absolute_url(path('app_user_edit')) }}">cliquez-ici</a></b>, connectez-vous si besoin et allez sur la page "Mes informations".
-        Vous pourrez modifier vos préférences pour ne plus recevoir ces mails.</p>
-    </div>
+    {% if footer %}
+      <div class="footer">
+        <p>Si vous ne souhaitez plus recevoir les mails de rappel, <b>
+            <a href="{{ absolute_url(path('app_user_edit')) }}">cliquez-ici</a></b>, connectez-vous si besoin et
+          allez sur la page "Mes informations".
+          Vous pourrez modifier vos préférences pour ne plus recevoir ces mails.</p>
+      </div>
+    {% endif %}
   </div>
 {% endapply %}
 
