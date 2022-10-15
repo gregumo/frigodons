@@ -1,23 +1,32 @@
-# DC Symfony starter kit
+# Frig'o dons
+
+Le Frig'o dons est un réfrigérateur en libre service sur la commune de La Montagne (44).
 
 ## Stack
 - Caddy web server
 - PHP 8.1
 - Symfony 6.1.4
 - Postgresql 14
-- Mercure
+- Ansible
+- Docker
 
-From [symfony docker-based installer](https://github.com/dunglas/symfony-docker)  
-with bundles : `symfony/orm-pack, symfony/mercure-bundle, symfony/mailer`  
-and dev bundles : `symfony/profiler-pack, symfony/maker-bundle`
+From [symfony docker-based installer](https://github.com/dunglas/symfony-docker)
 
-## Development
-- [Best practices](doc/development/best_practices.md)
-- [Install](doc/development/install.md)
-- [Development tools](doc/development/development_tools.md)
-- [Tests](doc/development/tests.md)
-- [Aliases](doc/development/aliases.md)
+With bundles :
+- annotations
+- friendsofsymfony/jsrouting-bundle
+- gedmo/doctrine-extensions
+- symfony/form
+- symfony/mailer
+- symfony/mercure-bundle
+- symfony/orm-pack
+- symfony/security-bundle
+- symfony/translation
+- symfony/validator
+- symfony/webpack-encore-bundle
+- symfonycasts/verify-email-bundle
+- zenstruck/schedule-bundle
 
-## Project
-- [Roles](doc/project/roles.md)
-- [Workflows](doc/project/workflows.md)
+And dev bundles :
+- symfony/maker-bundle
+- symfony/profiler-pack
