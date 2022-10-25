@@ -46,8 +46,9 @@ data-year="{{ currentYear }}"
         {% for weekDay in 1..7 %}
           {% set day = calendarDays[loop.index - 1 + (loop.parent.loop.index -1) * 7] %}
           {% set date = cleaningDates[day] %}
+          {% set mustBeTrained = date.user is not null and is_granted('ROLE_MANAGER') and date.user.isVolunteer and date.user.hasBeenTrained == false %}
           <td
-                  class="p-1 h-20 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition duration-300 ease
+                  class="relative p-1 h-20 xl:w-40 lg:w-30 md:w-30 sm:w-20 w-10 overflow-auto transition duration-300 ease
                                 {% if day == 'now'|date('Y-m-d') %}
                                     cleaning-date-today
                                 {% endif %}
@@ -56,8 +57,10 @@ data-year="{{ currentYear }}"
                                 {% endif %}
                                 {% if date.mode in ['delete', 'unauthorized_delete'] %}
                                     {% if date.modal %}bg-purple hover:bg-purple-600{% else %}bg-purple-200{% endif %}
-                                {% elseif date.mode in ['cleaner_contact', 'cleaner_contact'] %}
-                                    {% if date.modal %}bg-blue-400 hover:bg-blue-500{% else %}bg-blue-200{% endif %}
+                                {% elseif date.mode in ['cleaner_contact'] %}
+                                    {% if mustBeTrained %}bg-red-500 hover:bg-red-600 md:bg-blue-400 md:hover:bg-blue-500
+                                    {% elseif date.modal %}bg-blue-400 hover:bg-blue-500
+                                    {% else %}bg-blue-200{% endif %}
                                 {% elseif day|date('m') != currentMonth %}
                                     bg-gray-100 {% if date.modal %}hover:bg-gray-300{% endif %}
                                 {% elseif date.modal %}
@@ -91,6 +94,9 @@ data-year="{{ currentYear }}"
                 {% if date.user is not null %}
                   <span class="hidden md:inline-block">{{ date.user.fullName }}</span>
                   <span class="md:hidden inline-block">{{ date.user.firstname }} {{ date.user.lastname|first }}.</span>
+                  {% if mustBeTrained %}
+                    <div class="hidden md:block absolute bold top-0 right-0 bg-red-500 w-6 h-6">!</div>
+                  {% endif %}
                 {% endif %}
               </div>
             </div>

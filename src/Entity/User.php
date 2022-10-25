@@ -72,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
     private bool $missingVolunteerMailOptIn = false;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => '0'])]
+    private bool $hasBeenTrained = false;
+
     public function __construct()
     {
         $this->cleaningDates = new ArrayCollection();
@@ -208,6 +211,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMissingVolunteerMailOptIn(bool $missingVolunteerMailOptIn): self
     {
         $this->missingVolunteerMailOptIn = $missingVolunteerMailOptIn;
+
+        return $this;
+    }
+
+    public function isHasBeenTrained(): bool
+    {
+        return $this->hasBeenTrained;
+    }
+
+    public function setHasBeenTrained(bool $hasBeenTrained): self
+    {
+        $this->hasBeenTrained = $hasBeenTrained;
 
         return $this;
     }

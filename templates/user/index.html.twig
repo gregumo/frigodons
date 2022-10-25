@@ -20,9 +20,10 @@
     <table class="table-auto min-w-full leading-normal text-sm">
       <thead>
       <tr>
-        {% set headers = ['Prénom', 'Nom', 'E-mail', 'Téléphone', 'Mail rappel', 'Mail manque bénévole', 'Quota responsable', 'Quota nettoyage'] %}
+        {% set headers = ['Prénom', 'Nom', 'E-mail', 'Téléphone', 'Mail rappel', 'Mail manque bénévole', 'Formé·e ?', 'Quota responsable', 'Quota nettoyage'] %}
         {% for header in headers %}
-          {% if title == 'Bénévoles' and header == 'Quota responsable' %}
+          {% if (title == 'Responsables' and header == 'Formé·e ?')
+          or (title == 'Bénévoles' and header == 'Quota responsable') %}
             {% set break = true %}
           {% else %}
             <th class="px-5 py-2 border-b-2 border-gray-200 bg-blue-400 text-white text-left text-sm uppercase font-normal
@@ -61,11 +62,16 @@
             {{ user_macro.phone(user.phone) }}
           </td>
           <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200 text-center">
-            {{ user_macro.optIn(user.callbackMailOptIn, 'table') }}
+            {{ user_macro.boolean(user.callbackMailOptIn, 'table') }}
           </td>
           <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200 text-center">
-            {{ user_macro.optIn(user.missingVolunteerMailOptIn, 'table') }}
+            {{ user_macro.boolean(user.missingVolunteerMailOptIn, 'table') }}
           </td>
+          {% if title == 'Bénévoles' %}
+            <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200 text-center">
+              {{ user_macro.boolean(user.hasBeenTrained, 'table') }}
+            </td>
+          {% endif %}
           {% if title == 'Responsables' %}
             <td class="px-5 py-2 border-b border-gray-200 text-center">
               {{ user_macro.quota(user.supervisingCount, supervisorsMustDo, 'table') }}

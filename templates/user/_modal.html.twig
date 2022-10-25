@@ -4,8 +4,8 @@
   <li class="py-0.5"><b>Nom : </b>{{ user.lastname }}</li>
   <li class="py-0.5"><b>E-mail : </b>{{ user_macro.email(user.email) }}</li>
   <li class="py-0.5"><b>Téléphone : </b>{{ user_macro.phone(user.phone) }}</li>
-  <li class="py-0.5"><b>Mail rappel : </b>{{ user_macro.optIn(user.callbackMailOptIn, 'modal') }}</li>
-  <li class="py-0.5"><b>Mail manque bénévole : </b>{{ user_macro.optIn(user.missingVolunteerMailOptIn, 'modal') }}</li>
+  <li class="py-0.5"><b>Mail rappel : </b>{{ user_macro.boolean(user.callbackMailOptIn, 'modal') }}</li>
+  <li class="py-0.5"><b>Mail manque bénévole : </b>{{ user_macro.boolean(user.missingVolunteerMailOptIn, 'modal') }}</li>
   {% if isManager %}
     <li class="py-0.5"><b>Quota responsable : </b>{{ user_macro.quota(user.supervisingCount, supervisorsMustDo, 'modal') }}</li>
   {% endif %}
