@@ -215,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isHasBeenTrained(): bool
+    public function hasBeenTrained(): bool
     {
         return $this->hasBeenTrained;
     }
