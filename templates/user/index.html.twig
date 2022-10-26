@@ -68,7 +68,7 @@
             {{ user_macro.boolean(user.missingVolunteerMailOptIn, 'table') }}
           </td>
           {% if title == 'Bénévoles' %}
-            <td class="hidden md:table-cell px-5 py-2 border-b border-gray-200 text-center">
+            <td class="px-5 py-2 border-b border-gray-200 text-center">
               {{ user_macro.boolean(user.hasBeenTrained, 'table') }}
             </td>
           {% endif %}
