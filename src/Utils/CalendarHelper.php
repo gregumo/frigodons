@@ -30,8 +30,9 @@ class CalendarHelper
     public function prepareView($month, $year, $template): string
     {
         $currentDate = $month !== null && $year !== null ?
-            \DateTime::createFromFormat('n-Y', sprintf('%s-%s', $month, $year)) :
+            \DateTime::createFromFormat('j-n-Y', sprintf('1-%s-%s', $month, $year)) :
             new \DateTime('first day of this month');
+
 
         $currentMonth = $currentDate->format('n');
         $currentYear = $currentDate->format('Y');
@@ -60,7 +61,7 @@ class CalendarHelper
 
         $participationContent = $this->participationHelper->render();
 
-        $intl = \IntlDateFormatter::create('fr_FR',\IntlDateFormatter::FULL,\IntlDateFormatter::NONE, null,\IntlDateFormatter::GREGORIAN, 'MMMM Y');
+        $intl = \IntlDateFormatter::create('fr_FR',\IntlDateFormatter::FULL,\IntlDateFormatter::NONE, null,\IntlDateFormatter::GREGORIAN, 'MMMM yyyy');
         $frMonthDate = ucfirst($intl->format($currentDate));
 
         return $this->twig->render($template, compact(
