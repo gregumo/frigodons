@@ -42,10 +42,12 @@ abstract class DateRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('d')
             ->select('count(d.id)')
-            ->where('d.day < :date')
+            ->where('d.day >= :startDate')
+            ->andWhere('d.day < :today')
             ->andWhere("d.$userFieldName = :user")
             ->setParameters([
-                'date' => (new \DateTime())->format('Y-m-d'),
+                'startDate' => (new \DateTime())->format('Y-01-01'),
+                'today' => (new \DateTime())->format('Y-m-d'),
                 'user' => $user
             ])
             ->getQuery()
