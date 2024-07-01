@@ -5,34 +5,50 @@
 {% block title %}Contact{% endblock %}
 
 {% block body %}
-  <h1>Contact</h1>
-  <div class="md:flex flex-row space-x-10">
-    <div class="basis-1/3 md:basis-2/3 lg:basis-1/2 xl:basis-1/3">
-      <div class="mb-6">
-        Pour nous contacter, merci d'utiliser le formulaire ci-dessous.<br/>
-        N'hésitez pas à nous laisser votre numéro de téléphone si vous le souhaitez.<br/>
-        Nous reviendrons vers vous au plus vite.
-      </div>
+    <h1>Contact</h1>
+    <div class="md:flex flex-row space-x-10">
+        <div class="basis-1/3 md:basis-2/3 lg:basis-1/2 xl:basis-1/3">
+            <div class="mb-6">
+                Pour nous contacter, merci d'utiliser le formulaire ci-dessous.<br/>
+                N'hésitez pas à nous laisser votre numéro de téléphone si vous le souhaitez.<br/>
+                Nous reviendrons vers vous au plus vite.
+            </div>
 
-      {% for message in app.flashes('success') %}
-        {% set successMessage = true %}
-        <div class="px-4 py-2 mb-4 text-green-700 bg-green-100 rounded-lg">
-          {{ message|trans }}
+            {% for message in app.flashes('success') %}
+                {% set successMessage = true %}
+                <div class="px-4 py-2 mb-4 text-green-700 bg-green-100 rounded-lg">
+                    {{ message|trans }}
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <altcha-widget
+                        class="w-full"
+                        challengeurl="{{ path('app_altcha_challenge') }}"
+                        hidelogo
+                        hidefooter
+                        strings="{{ {
+                            "ariaLinkLabel": "Altcha.org",
+                            "error": "Verification échouée. Merci de réessayer plus tard.",
+                            "expired": "Verification expirée. Merci de réessayer.",
+                            "footer": "Protégé par <a href=\"https://altcha.org/\" target=\"_blank\" aria-label=\"Visit Altcha.org\">ALTCHA</a>",
+                            "label": "Je ne suis pas un robot",
+                            "verified": "Vérifié",
+                            "verifying": "Vérification...",
+                            "waitAlert": "Vérification... Merci de patienter."
+                        }|json_encode }}"
+                    ></altcha-widget>
+                    <button type="submit"
+                            class="block w-full bg-purple hover:bg-purple-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 transition duration-300 ease">
+                        Envoyer
+                    </button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
         </div>
-      {% endfor %}
-
-      <div class="row">
-        <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
-          {{ form_start(form) }}
-          {{ form_widget(form) }}
-          <button type="submit"
-                  class="block w-full bg-purple hover:bg-purple-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 transition duration-300 ease">
-            Envoyer
-          </button>
-          {{ form_end(form) }}
-        </div>
-      </div>
-
     </div>
-  </div>
 {% endblock %}

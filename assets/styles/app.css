@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --altcha-max-width: 100%;
+    --altcha-border-radius:16px;
+    --altcha-color-border:rgb(104, 101, 101);
+}
+
 @layer base {
     body{
         font-family: Arial, system-ui, sans-serif;

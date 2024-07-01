@@ -5,6 +5,7 @@ import Helper from "./Helper";
 import Nav from "./Nav";
 import { Calendar } from "./Calendar";
 import { UserList } from "./UserList";
+import 'altcha';
 
 const routes = require('./routes.json');
 import Routing from 'fos-router';

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ContactType;
 use App\Model\Contact;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -52,6 +53,23 @@ class ContactController extends AbstractController
             'slug' => 'contact',
             'form' => $form->createView(),
             'controller_name' => 'ContactController',
+        ]);
+    }
+
+    #[Route('/altcha_challenge', name: 'app_altcha_challenge')]
+    public function createChallenge(): JsonResponse
+    {
+        $salt = bin2hex(random_bytes(12));
+        $number = random_int('1e3', '1e5');
+
+        $challenge = hash('sha256', $salt.$number);
+        $signature = hash_hmac('sha256', $challenge, 'ALTCHA_HMAC_KEY');
+
+        return new JsonResponse([
+            'algorithm' => 'sha-256',
+            'challenge' => $challenge,
+            'salt' => $salt,
+            'signature' => $signature,
         ]);
     }
 }
