@@ -60,7 +60,7 @@ class ContactController extends AbstractController
     public function createChallenge(): JsonResponse
     {
         $salt = bin2hex(random_bytes(12));
-        $number = random_int('1e2', '1e3');
+        $number = random_int('1e3', '1e4');
 
         $challenge = hash('sha256', $salt.$number);
         $signature = hash_hmac('sha256', $challenge, 'ALTCHA_HMAC_KEY');
