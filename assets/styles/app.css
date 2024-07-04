@@ -5,7 +5,8 @@
 :root {
     --altcha-max-width: 100%;
     --altcha-border-radius:16px;
-    --altcha-color-border:rgb(104, 101, 101);
+    --altcha-color-border: #686565;
+    --altcha-color-text: #686565;
 }
 
 @layer base {
