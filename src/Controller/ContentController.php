@@ -29,6 +29,12 @@ class ContentController extends AbstractController
         return $this->render('content/became_volunteer.html.twig', compact('volunteerCount'));
     }
 
+    #[Route('/documents', name: 'app_content_documents')]
+    public function documents(UserRepository $userRepo): Response
+    {
+        return $this->render('content/documents.html.twig');
+    }
+
     #[Route('/email1/{sendMail}', name: 'email1')]
     public function email1(
         CleaningDateRepository    $cleaningDateRepo,
