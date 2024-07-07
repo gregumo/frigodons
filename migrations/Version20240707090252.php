@@ -22,8 +22,8 @@ final class Version20240707090252 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE key_value_info_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE key_value_info (id INT NOT NULL, key VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('INSERT INTO key_value_info (key, value) VALUES (\'closetPadlockCode\', \'0000\')');
-        $this->addSql('INSERT INTO key_value_info (key, value) VALUES (\'composterPadlockCode\', \'0000\')');
+        $this->addSql('INSERT INTO key_value_info (id, key, value) VALUES (1, \'closetPadlockCode\', \'0000\')');
+        $this->addSql('INSERT INTO key_value_info (id, key, value) VALUES (2, \'composterPadlockCode\', \'0000\')');
     }
 
     public function down(Schema $schema): void
