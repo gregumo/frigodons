@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\KeyValueInfo;
 use App\Repository\CleaningDateRepository;
+use App\Repository\KeyValueInfoRepository;
 use App\Repository\SupervisingDateRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,9 +32,15 @@ class ContentController extends AbstractController
     }
 
     #[Route('/documents', name: 'app_content_documents')]
-    public function documents(UserRepository $userRepo): Response
+    public function documents(KeyValueInfoRepository $keyValueInfoRepo): Response
     {
-        return $this->render('content/documents.html.twig');
+        $closetPadlockCode =  $keyValueInfoRepo->findOneBy(['key' => 'closetPadlockCode']);
+        $composterPadlockCode =  $keyValueInfoRepo->findOneBy(['key' => 'composterPadlockCode']);
+
+        return $this->render('content/documents.html.twig', [
+            'closetPadlockCode' => $closetPadlockCode?->getValue(),
+            'composterPadlockCode' => $composterPadlockCode?->getValue(),
+        ]);
     }
 
     #[Route('/email1/{sendMail}', name: 'email1')]
