@@ -15,13 +15,13 @@ class ContactType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname', TextType::class, ['attr' => ['placeholder' => 'contact.field.firstname.label']])
-            ->add('lastname', TextType::class, ['attr' => ['placeholder' => 'contact.field.lastname.label']])
             // Email is a honeypot input
             ->add('email', TextType::class, [
                 'required' => false,
                 'row_attr' => ['class' => 'email-row']
             ])
+            ->add('firstname', TextType::class, ['attr' => ['placeholder' => 'contact.field.firstname.label']])
+            ->add('lastname', TextType::class, ['attr' => ['placeholder' => 'contact.field.lastname.label']])
             ->add(Contact::EMAIL_HIDDEN_INPUT, EmailType::class, [
                 'required' => true,
                 'attr' => ['placeholder' => 'contact.field.email.label']
