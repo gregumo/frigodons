@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Model\Contact;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -16,7 +17,15 @@ class ContactType extends AbstractType
         $builder
             ->add('firstname', TextType::class, ['attr' => ['placeholder' => 'contact.field.firstname.label']])
             ->add('lastname', TextType::class, ['attr' => ['placeholder' => 'contact.field.lastname.label']])
-            ->add('email', EmailType::class, ['attr' => ['placeholder' => 'contact.field.email.label']])
+            // Email is a honeypot input
+            ->add('email', TextType::class, [
+                'required' => false,
+                'row_attr' => ['class' => 'email-row']
+            ])
+            ->add(Contact::EMAIL_HIDDEN_INPUT, EmailType::class, [
+                'required' => true,
+                'attr' => ['placeholder' => 'contact.field.email.label']
+            ])
             ->add('phone', TextType::class, [
                 'required' => false,
                 'attr' => [

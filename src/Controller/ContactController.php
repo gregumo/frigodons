@@ -26,22 +26,26 @@ class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $contact = $form->getData();
 
-            $mailContent = $this->renderView('mail/contact.html.twig', compact('contact'));
+            // Check that honeypot is empty
+            if($contact->getEmail() === null) {
 
-            $from = new Address($this->getParameter('app.mail_from'), $this->getParameter('app.mail_from_name'));
-            $to = new Address($this->getParameter('app.mail_reply_to'), $this->getParameter('app.mail_reply_to_name'));
+                $mailContent = $this->renderView('mail/contact.html.twig', compact('contact'));
 
-            $email = (new Email())
-                ->from($from)
-                ->to($to)
-                ->subject($translator->trans('contact.email.subject', [
-                    'firstname' => $contact->getFirstname(),
-                    'lastname' => $contact->getLastname(),
-                ]))
-                ->text($mailContent)
-                ->html($mailContent);
+                $from = new Address($this->getParameter('app.mail_from'), $this->getParameter('app.mail_from_name'));
+                $to = new Address($this->getParameter('app.mail_reply_to'), $this->getParameter('app.mail_reply_to_name'));
 
-            $mailer->send($email);
+                $email = (new Email())
+                    ->from($from)
+                    ->to($to)
+                    ->subject($translator->trans('contact.email.subject', [
+                        'firstname' => $contact->getFirstname(),
+                        'lastname' => $contact->getLastname(),
+                    ]))
+                    ->text($mailContent)
+                    ->html($mailContent);
+
+                $mailer->send($email);
+            }
 
             $this->addFlash('success', 'contact.form.success');
 

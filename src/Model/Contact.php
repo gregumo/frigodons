@@ -6,6 +6,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Contact
 {
+    public const EMAIL_HIDDEN_INPUT = 'jek9g4rtOP';
+
     #[Assert\NotBlank]
     private string $firstname;
 
@@ -18,10 +20,12 @@ class Contact
     )]
     private ?string $phone = null;
 
+    private ?string $email = null;
+
     #[Assert\Email(
         message: 'L\'adresse e-mail {{ value }} n\'est pas une adresse valide.',
     )]
-    private string $email;
+    private string $jek9g4rtOP;
 
     #[Assert\NotBlank]
     private string $message;
@@ -31,11 +35,9 @@ class Contact
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(string $firstname): void
     {
         $this->firstname = $firstname;
-
-        return $this;
     }
 
     public function getLastname(): string
@@ -43,11 +45,9 @@ class Contact
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function setLastname(string $lastname): void
     {
         $this->lastname = $lastname;
-
-        return $this;
     }
 
     public function getPhone(): ?string
@@ -55,23 +55,29 @@ class Contact
         return $this->phone;
     }
 
-    public function setPhone(string $phone): self
+    public function setPhone(string $phone): void
     {
         $this->phone = $phone;
-
-        return $this;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
+    }
 
-        return $this;
+    public function getJek9g4rtOP(): string
+    {
+        return $this->jek9g4rtOP;
+    }
+
+    public function setJek9g4rtOP(string $jek9g4rtOP): void
+    {
+        $this->jek9g4rtOP = $jek9g4rtOP;
     }
 
     public function getMessage(): string
@@ -79,10 +85,8 @@ class Contact
         return $this->message;
     }
 
-    public function setMessage(string $message): self
+    public function setMessage(string $message): void
     {
         $this->message = $message;
-
-        return $this;
     }
 }
