@@ -22,7 +22,7 @@ class ContactType extends AbstractType
             ])
             ->add('firstname', TextType::class, ['attr' => ['placeholder' => 'contact.field.firstname.label']])
             ->add('lastname', TextType::class, ['attr' => ['placeholder' => 'contact.field.lastname.label']])
-            ->add(Contact::EMAIL_HIDDEN_INPUT, EmailType::class, [
+            ->add('emailAddress', EmailType::class, [
                 'required' => true,
                 'attr' => ['placeholder' => 'contact.field.email.label']
             ])

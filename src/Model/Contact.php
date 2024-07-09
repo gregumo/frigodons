@@ -6,8 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Contact
 {
-    public const EMAIL_HIDDEN_INPUT = 'jek9g4rtOP';
-
     #[Assert\NotBlank]
     private string $firstname;
 
@@ -25,7 +23,7 @@ class Contact
     #[Assert\Email(
         message: 'L\'adresse e-mail {{ value }} n\'est pas une adresse valide.',
     )]
-    private string $jek9g4rtOP;
+    private string $emailAddress;
 
     #[Assert\NotBlank]
     private string $message;
@@ -70,14 +68,14 @@ class Contact
         $this->email = $email;
     }
 
-    public function getJek9g4rtOP(): string
+    public function getEmailAddress(): string
     {
-        return $this->jek9g4rtOP;
+        return $this->emailAddress;
     }
 
-    public function setJek9g4rtOP(string $jek9g4rtOP): void
+    public function setEmailAddress(string $emailAddress): void
     {
-        $this->jek9g4rtOP = $jek9g4rtOP;
+        $this->emailAddress = $emailAddress;
     }
 
     public function getMessage(): string
