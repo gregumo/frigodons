@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% set successMessage = false %}
-
 {% block title %}Contact{% endblock %}
 
 {% block body %}
@@ -14,41 +12,44 @@
                 Nous reviendrons vers vous au plus vite.
             </div>
 
-            {% for message in app.flashes('success') %}
-                {% set successMessage = true %}
-                <div class="px-4 py-2 mb-4 text-green-700 bg-green-100 rounded-lg">
-                    {{ message|trans }}
-                </div>
+            {% for label, messages in app.flashes() %}
+                {% for message in messages %}
+                {% set color = label == 'success' ? 'green' : 'red' %}
+                    <div class="px-4 py-2 mb-4 text-{{ color }}-700 bg-{{ color }}-100 rounded-lg">
+                        {{ message|raw }}
+                    </div>
+                {% endfor %}
             {% endfor %}
 
-            <div class="row">
-                <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
-                    {{ form_start(form) }}
-                    {{ form_widget(form) }}
-                    <altcha-widget
-                        class="w-full"
-                        challengeurl="{{ path('app_altcha_challenge') }}"
-                        hidelogo
-                        hidefooter
-                        strings="{{ {
-                            "ariaLinkLabel": "Altcha.org",
-                            "error": "Verification échouée. Merci de réessayer plus tard.",
-                            "expired": "Verification expirée. Merci de réessayer.",
-                            "footer": "Protégé par <a href=\"https://altcha.org/\" target=\"_blank\" aria-label=\"Visit Altcha.org\">ALTCHA</a>",
-                            "label": "Je ne suis pas un robot",
-                            "verified": "Vérifié",
-                            "verifying": "Vérification...",
-                            "waitAlert": "Vérification... Merci de patienter."
-                        }|json_encode }}"
-                    ></altcha-widget>
-                    <button type="submit"
-                            class="block w-full bg-purple hover:bg-purple-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 transition duration-300 ease">
-                        Envoyer
-                    </button>
-                    {{ form_end(form) }}
+            {% if form is not null %}
+                <div class="row">
+                    <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
+                        {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <altcha-widget
+                            class="w-full"
+                            challengeurl="{{ path('app_altcha_challenge') }}"
+                            hidelogo
+                            hidefooter
+                            strings="{{ {
+                                "ariaLinkLabel": "Altcha.org",
+                                "error": "Verification échouée. Merci de réessayer plus tard.",
+                                "expired": "Verification expirée. Merci de réessayer.",
+                                "footer": "Protégé par <a href=\"https://altcha.org/\" target=\"_blank\" aria-label=\"Visit Altcha.org\">ALTCHA</a>",
+                                "label": "Je ne suis pas un robot",
+                                "verified": "Vérifié",
+                                "verifying": "Vérification...",
+                                "waitAlert": "Vérification... Merci de patienter."
+                            }|json_encode }}"
+                        ></altcha-widget>
+                        <button type="submit"
+                                class="block w-full bg-purple hover:bg-purple-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 transition duration-300 ease">
+                            Envoyer
+                        </button>
+                        {{ form_end(form) }}
+                    </div>
                 </div>
-            </div>
-
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -68,6 +68,7 @@ contact:
         date.label : Date
     form:
         success: Votre message a bien été envoyé. Merci !
+        error: Une erreur s'est produite. Votre message n'a pas été envoyé. Pour réessayer, <u><a href="{contact_url}">cliquez ici</a></u> et complétez à nouveau le formulaire de contact.
     field:
         firstname.label : Prénom
         lastname.label : Nom

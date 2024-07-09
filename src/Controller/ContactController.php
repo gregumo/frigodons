@@ -45,17 +45,17 @@ class ContactController extends AbstractController
                     ->html($mailContent);
 
                 $mailer->send($email);
+
+                $this->addFlash('success', $translator->trans('contact.form.success'));
+                $form = null;
+            } else {
+                $this->addFlash('error', $translator->trans('contact.form.error', ['contact_url' => $this->generateUrl('app_contact')]));
             }
-
-            $this->addFlash('success', 'contact.form.success');
-
-            return $this->redirectToRoute('app_contact');
         }
-
 
         return $this->render('contact/index.html.twig', [
             'slug' => 'contact',
-            'form' => $form->createView(),
+            'form' => $form?->createView(),
             'controller_name' => 'ContactController',
         ]);
     }
