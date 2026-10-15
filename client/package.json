@@ -1,0 +1,41 @@
+{
+  "name": "frigodons-client",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "react-router dev",
+    "build": "react-router build",
+    "deploy": "wrangler deploy",
+    "typecheck": "wrangler types && react-router typegen && tsc -b",
+    "check": "biome check --write --unsafe"
+  },
+  "dependencies": {
+    "altcha": "^2.0.0",
+    "clsx": "^2.1.1",
+    "isbot": "^5.1.37",
+    "react": "^19.2.4",
+    "react-aria-components": "^1.18.0",
+    "react-dom": "^19.2.4",
+    "react-router": "^7.14.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.1.2",
+    "@cloudflare/vite-plugin": "^1.30.3",
+    "@react-router/dev": "^7.14.2",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.3",
+    "wrangler": "^4.79.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd",
+      "sharp"
+    ]
+  }
+}

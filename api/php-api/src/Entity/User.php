@@ -235,7 +235,7 @@ class User implements UserInterface
         return $this;
     }
 
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'date:read'])]
     #[SerializedName('manager')]
     public function isManager(): bool
     {
@@ -282,7 +282,10 @@ class User implements UserInterface
         return $this;
     }
 
-    #[Groups(['user:read'])]
+    /**
+     * Shown on the calendar, so managers know which volunteers still have to be trained.
+     */
+    #[Groups(['user:read', 'date:read'])]
     public function getHasBeenTrained(): bool
     {
         return $this->hasBeenTrained;

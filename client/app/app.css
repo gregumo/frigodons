@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Arial, system-ui, sans-serif;
+  --font-oswald: Oswald, system-ui, sans-serif;
+  --font-chelsea: "Chelsea Market", system-ui, sans-serif;
+
+  --color-purple: #747ad5;
+  --color-purple-200: #b2b2d2;
+  --color-purple-600: #6269d0;
+  --color-purple-700: #464ca9;
+  --color-blue-200: #b2cbf1;
+  --color-yellow: #f1d275;
+  --color-yellow-700: #8d6f17;
+  --color-beige: #f2f0f0;
+  --color-black: #210b09;
+  --color-black-200: #9b9797;
+  --color-black-400: #686565;
+
+  --text-2xl: 1.4rem;
+  --text-3xl: 1.7rem;
+}
+
+:root {
+  --altcha-max-width: 100%;
+  --altcha-border-radius: 16px;
+  --altcha-color-border: #686565;
+  --altcha-color-text: #686565;
+}
+
+@layer base {
+  h1 {
+    font-family: var(--font-oswald);
+    font-weight: 500;
+    font-size: var(--text-3xl);
+    padding-bottom: 0.4em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: var(--font-oswald);
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    padding-bottom: 0.6em;
+    margin-top: 2em;
+  }
+
+  h3 {
+    font-family: var(--font-oswald);
+    font-size: var(--text-xl);
+    color: var(--color-black-400);
+    font-weight: 400;
+    padding-bottom: 0.6em;
+    margin-top: 2em;
+  }
+
+  h2:first-of-type,
+  h3:first-of-type {
+    margin-top: 0;
+  }
+
+  p {
+    padding: 0.1em 0;
+  }
+
+  ul {
+    list-style-position: inside;
+  }
+
+  @media (width >= 48rem) {
+    h1 {
+      font-size: var(--text-4xl);
+    }
+
+    h2 {
+      font-size: var(--text-3xl);
+    }
+
+    h3 {
+      font-size: var(--text-2xl);
+    }
+  }
+}
+
+@utility link {
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--color-purple-700);
+    transition: color 0.2s ease;
+  }
+}
