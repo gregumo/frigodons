@@ -3,6 +3,7 @@ parameters:
   env(APP_URL): ""
   env(CORS_ALLOW_ORIGIN): ""
   env(DATABASE_URL): ""
+  env(JWT_SECRET): ""
 
 services:
   _defaults:

@@ -10,13 +10,13 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use App\Repository\UserRepository;
+use App\State\MeProvider;
 use App\State\UserDirectoryProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
@@ -33,12 +33,18 @@ use Symfony\Component\Validator\Constraints as Assert;
             provider: UserDirectoryProvider::class,
         ),
         new Get(security: 'object == user'),
+        new Get(
+            uriTemplate: '/me',
+            security: "is_granted('ROLE_USER')",
+            normalizationContext: ['groups' => ['user:read'], 'item_uri_template' => '/users/{id}'],
+            provider: MeProvider::class,
+        ),
         new Patch(security: 'object == user'),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface
 {
     public const string ROLE_VOLUNTEER = 'ROLE_VOLUNTEER';
     public const string ROLE_MANAGER = 'ROLE_MANAGER';
@@ -57,9 +63,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(message: "L'adresse e-mail {{ value }} n'est pas une adresse valide.")]
     #[Groups(['user:read', 'user:write', 'date:read'])]
     private ?string $email = null;
-
-    #[ORM\Column]
-    private ?string $password = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
@@ -147,21 +150,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * The id is used, rather than the email, so tokens remain valid when users change their email.
+     */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
-
-        return $this;
+        return (string) $this->id;
     }
 
     public function getFirstname(): ?string

@@ -4,6 +4,12 @@ api_platform:
   enable_swagger_ui: true
   path_segment_name_generator: api_platform.path_segment_name_generator.dash
 
+  swagger:
+    api_keys:
+      JWT:
+        name: Authorization
+        type: header
+
   formats:
     jsonld: [ 'application/ld+json' ]
     json: [ 'application/json' ]

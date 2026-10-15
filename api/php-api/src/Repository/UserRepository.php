@@ -20,6 +20,19 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * Emails are compared case-insensitively, as they used to be typed by hand by volunteers.
+     */
+    public function findOneByEmail(string $email): ?User
+    {
+        return $this
+            ->createQueryBuilder('u')
+            ->where('LOWER(u.email) = LOWER(:email)')
+            ->setParameter('email', trim($email))
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function countAll(): int
     {
         return $this->count();

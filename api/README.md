@@ -31,6 +31,24 @@ docker compose exec php-api bin/console hautelook:fixtures:load -n --purge-with-
 
 La documentation de l'API est disponible sur [http://localhost:61100/docs](http://localhost:61100/docs).
 
+## Authentification
+
+Les bénévoles se connectent avec leur adresse e-mail uniquement, sans mot de passe :
+
+```bash
+curl -X POST http://localhost:61100/login -H 'Content-Type: application/json' -d '{"email": "manager1@frigodons.org"}'
+```
+
+L'API renvoie un JWT (valable 30 jours) à envoyer dans l'en-tête `Authorization: Bearer <token>` des requêtes suivantes.
+Avec les fixtures, les comptes suivants sont disponibles : `manager1@frigodons.org`, `manager2@frigodons.org`
+et `volunteer1@frigodons.org` à `volunteer10@frigodons.org`.
+
+Pour créer un compte :
+
+```bash
+docker compose exec php-api bin/console app:add-user email@exemple.fr Prénom Nom "06 00 00 00 00" [--manager]
+```
+
 ## Qualité
 
 ```bash
