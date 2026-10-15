@@ -1,0 +1,52 @@
+App\Entity\User:
+  manager1:
+    email: 'manager1\@frigodons.org'
+    firstname: 'Élodie'
+    lastname: 'Martin'
+    phone: '06 11 22 33 44'
+    gender: 'w'
+    roles: ['ROLE_MANAGER']
+    password: '<password()>'
+    callbackMailOptIn: true
+    missingVolunteerMailOptIn: true
+    hasBeenTrained: true
+
+  manager2:
+    email: 'manager2\@frigodons.org'
+    firstname: 'Bernard'
+    lastname: 'Durand'
+    phone: '06 22 33 44 55'
+    gender: 'm'
+    roles: ['ROLE_MANAGER']
+    password: '<password()>'
+    hasBeenTrained: true
+
+  volunteer1:
+    email: 'volunteer1\@frigodons.org'
+    firstname: 'Alice'
+    lastname: 'Petit'
+    phone: '06 33 44 55 66'
+    gender: 'w'
+    roles: ['ROLE_VOLUNTEER']
+    password: '<password()>'
+    callbackMailOptIn: true
+    hasBeenTrained: true
+
+  volunteer{2..10}:
+    email: 'volunteer<current()>\@frigodons.org'
+    firstname: '<fr_FR:firstName()>'
+    lastname: '<fr_FR:lastName()>'
+    phone: '06 <numberBetween(10, 99)> <numberBetween(10, 99)> <numberBetween(10, 99)> <numberBetween(10, 99)>'
+    gender: '<randomElement(["m", "w"])>'
+    roles: ['ROLE_VOLUNTEER']
+    password: '<password()>'
+    missingVolunteerMailOptIn: '<boolean()>'
+    hasBeenTrained: '<boolean(70)>'
+
+  deleted_volunteer:
+    email: 'deleted\@frigodons.org'
+    firstname: 'Utilisateur'
+    lastname: 'Supprimé'
+    roles: ['ROLE_VOLUNTEER']
+    password: '<password()>'
+    deletedAt: '<(new \DateTimeImmutable("-1 month"))>'

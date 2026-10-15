@@ -6,6 +6,13 @@ doctrine:
 
   orm:
     validate_xml_mapping: true
+    # The existing tables use sequences (ORM 3 would use identity columns by default).
+    identity_generation_preferences:
+      Doctrine\DBAL\Platforms\PostgreSQLPlatform: sequence
+    filters:
+      soft_delete:
+        class: App\Doctrine\SoftDeleteFilter
+        enabled: true
     naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
     auto_mapping: true
     mappings:

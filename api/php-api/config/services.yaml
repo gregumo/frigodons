@@ -14,3 +14,4 @@ services:
     exclude:
       - '../src/Kernel.php'
       - '../src/Entity/'
+      - '../src/ApiResource/'
