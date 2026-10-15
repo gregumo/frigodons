@@ -1,0 +1,146 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "api/**"
+      - ".github/workflows/api.yml"
+  pull_request:
+    branches: ["**"]
+    paths:
+      - "api/**"
+      - ".github/workflows/api.yml"
+
+env:
+  COMPOSE_FILE: "docker-compose.yml:docker-compose.ci.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        name: [caddy, php-api, pg-backup]
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: gregumo/frigodons-${{ matrix.name }}
+          tags: type=sha
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: "{{defaultContext}}:api"
+          file: ./docker/${{ matrix.name }}/Dockerfile
+          tags: ghcr.io/${{ steps.meta.outputs.tags }}
+          push: true
+          cache-from: type=registry,ref=ghcr.io/gregumo/frigodons-${{ matrix.name }}:cache
+          cache-to: type=registry,ref=ghcr.io/gregumo/frigodons-${{ matrix.name }}:cache,mode=max
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        command:
+          - "docker compose exec -T php-api bin/console doctrine:schema:validate --env=test"
+          - "docker compose exec -T php-api ./vendor/bin/mago lint"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          tags: type=sha
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run tests
+        env:
+          IMAGE_TAG: ${{ steps.meta.outputs.tags }}
+        run: |
+          cd ./api/
+          cp .env.dist .env
+          docker compose up -d --wait
+
+          docker compose exec -T php-api bin/console doctrine:database:create --env=test
+          docker compose exec -T php-api bin/console doctrine:migrations:migrate --all-or-nothing --allow-no-migration --no-interaction --env=test
+
+          ${{ matrix.command }}
+
+  push-images:
+    if: github.ref == 'refs/heads/main'
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        name: [caddy, php-api, pg-backup]
+    steps:
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          tags: type=sha
+
+      - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
+        with:
+          ssh-host: ${{ secrets.PROD_API_IP }}
+          ssh-private-key: ${{ secrets.PROD_API_PRIVATE_KEY }}
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: |
+          docker pull ghcr.io/gregumo/frigodons-${{ matrix.name }}:${{ steps.meta.outputs.tags }};
+          docker image tag ghcr.io/gregumo/frigodons-${{ matrix.name }}:${{ steps.meta.outputs.tags }} frigodons/${{ matrix.name }}:${{ steps.meta.outputs.tags }};
+          docker save frigodons/${{ matrix.name }}:${{ steps.meta.outputs.tags }} | gzip | ssh -C root@${{ secrets.PROD_API_IP }} docker load;
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: [build, test, push-images]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          tags: type=sha
+
+      - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
+        with:
+          ssh-host: ${{ secrets.PROD_API_IP }}
+          ssh-private-key: ${{ secrets.PROD_API_PRIVATE_KEY }}
+
+      - run: >
+          cd ./api;
+
+          scp ./deploy.sh root@${{ secrets.PROD_API_IP }}:~;
+          scp ./docker-compose.yml root@${{ secrets.PROD_API_IP }}:~;
+          scp ./docker-compose.prod.yml root@${{ secrets.PROD_API_IP }}:~;
+
+          ssh root@${{ secrets.PROD_API_IP }} << 'EOF'
+            export IMAGE_TAG=${{ steps.meta.outputs.version }};
+
+            ./deploy.sh;
+            docker system prune --all --force --filter "until=96h";
+          EOF

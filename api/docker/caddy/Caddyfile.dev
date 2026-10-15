@@ -1,0 +1,14 @@
+http://localhost {
+  log
+
+  route {
+    root * /usr/src/app/public
+    rewrite * /index.php
+
+    php_fastcgi * {
+      to php-api:9000
+    }
+
+    encode gzip
+  }
+}

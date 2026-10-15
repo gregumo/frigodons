@@ -1,0 +1,34 @@
+api_platform:
+  title: "Frig'o dons"
+  description: "API du Frig'o dons."
+  enable_swagger_ui: true
+  path_segment_name_generator: api_platform.path_segment_name_generator.dash
+
+  formats:
+    jsonld: [ 'application/ld+json' ]
+    json: [ 'application/json' ]
+
+  docs_formats:
+    jsonld: [ 'application/ld+json' ]
+    jsonopenapi: [ 'application/vnd.openapi+json' ]
+    html: [ 'text/html' ]
+
+  patch_formats:
+    json: [ 'application/merge-patch+json' ]
+
+  mapping:
+    paths:
+      - '%kernel.project_dir%/src/Entity'
+
+  defaults:
+    pagination_enabled: false
+    stateless: true
+    cache_headers:
+      vary: [ 'Content-Type', 'Authorization', 'Origin' ]
+
+when@prod:
+  api_platform:
+    enable_swagger_ui: false
+    docs_formats:
+      jsonld: [ 'application/ld+json' ]
+      jsonopenapi: [ 'application/vnd.openapi+json' ]

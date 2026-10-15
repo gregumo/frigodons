@@ -1,0 +1,40 @@
+php-version = "8.4"
+
+[source]
+paths = ["src"]
+includes = ["vendor"]
+excludes = []
+
+[formatter]
+print-width = 120
+tab-width = 4
+use-tabs = false
+
+[linter]
+integrations = ["symfony"]
+
+[linter.rules]
+excessive-parameter-list = { enabled = false}
+cyclomatic-complexity = { enabled = false }
+too-many-methods = { enabled = false }
+too-many-properties = { enabled = false }
+too-many-enum-cases = { enabled = false }
+kan-defect = { enabled = false }
+halstead = { enabled = false }
+no-literal-password = { enabled = false }
+assert-description = { enabled = false }
+no-else-clause = { enabled = false }
+no-boolean-flag-parameter = { enabled = false }
+prefer-early-continue = { enabled = false }
+literal-named-argument = { enabled = false }
+sensitive-parameter = { enabled = false }
+tagged-todo = { enabled = false }
+
+# We should enable those later:
+identity-comparison = { enabled = false }
+no-empty-catch-clause = { enabled = false }
+no-shorthand-ternary = { enabled = false }
+no-multi-assignments = { enabled = false }
+braced-string-interpolation = { enabled = false }
+no-isset = { enabled = false }
+

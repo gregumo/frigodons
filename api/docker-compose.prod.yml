@@ -1,0 +1,27 @@
+services:
+  caddy:
+    image: frigodons/caddy:${IMAGE_TAG}
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    ports:
+      - "80:80"
+      - "443:443"
+
+  php-api:
+    image: frigodons/php-api:${IMAGE_TAG}
+    environment:
+      - APP_ENV=prod
+      - APP_DEBUG=0
+
+  pg-backup:
+    image: frigodons/pg-backup:${IMAGE_TAG}
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAMES=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - BACKUP_S3_HOST=${BACKUP_S3_HOST}
+      - BACKUP_S3_BUCKET=${BACKUP_S3_BUCKET}
+      - BACKUP_S3_ACCESS_KEY=${BACKUP_S3_ACCESS_KEY}
+      - BACKUP_S3_SECRET_KEY=${BACKUP_S3_SECRET_KEY}

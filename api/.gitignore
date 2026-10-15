@@ -1,0 +1,4 @@
+.env
+php-api/var/
+php-api/vendor/
+php-api/config/reference.php

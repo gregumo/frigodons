@@ -1,0 +1,16 @@
+parameters:
+  env(APP_SECRET): ""
+  env(APP_URL): ""
+  env(CORS_ALLOW_ORIGIN): ""
+  env(DATABASE_URL): ""
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/Kernel.php'
+      - '../src/Entity/'

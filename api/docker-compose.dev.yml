@@ -1,0 +1,54 @@
+# Ports are prefixed with 611 to avoid conflicts with other local projects.
+services:
+  caddy:
+    build:
+      context: .
+      dockerfile: docker/caddy/Dockerfile
+    volumes:
+      - "./docker/caddy/Caddyfile.dev:/etc/caddy/Caddyfile:ro"
+    ports:
+      - "61100:80"
+
+  php-api:
+    build:
+      context: .
+      dockerfile: docker/php-api/Dockerfile
+    volumes:
+      - "./php-api:/usr/src/app"
+      - "./docker/php-api/php-fpm.conf:/usr/local/etc/php-fpm.d/zz.conf"
+      - "./docker/php-api/php-dev.ini:/usr/local/etc/php/conf.d/php.ini"
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      TEST_DATABASE_URL: postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${TEST_DATABASE_NAME}
+
+      # XDEBUG_MODE required for step debugging
+      XDEBUG_MODE: debug
+      # default port for Xdebug 3 is 9003
+      XDEBUG_CONFIG: >-
+        client_host=host.docker.internal
+        idekey=PHPDEBUG
+        log_level=0
+      # This should correspond to the server declared in PHPStorm `Preferences | Languages & Frameworks | PHP | Servers`
+      PHP_IDE_CONFIG: serverName=php-api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  database:
+    command:
+      [
+        "postgres",
+        "-c",
+        "log_statement=all",
+        "-c",
+        "log_duration=on",
+        "-c",
+        "log_destination=stderr",
+      ]
+    ports:
+      - "61130:5432"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "61120:8025"
