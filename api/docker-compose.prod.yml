@@ -13,6 +13,12 @@ services:
       - APP_ENV=prod
       - APP_DEBUG=0
 
+  worker:
+    image: frigodons/php-api:${IMAGE_TAG}
+    environment:
+      - APP_ENV=prod
+      - APP_DEBUG=0
+
   pg-backup:
     image: frigodons/pg-backup:${IMAGE_TAG}
     environment:

@@ -34,6 +34,17 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  worker:
+    build:
+      context: .
+      dockerfile: docker/php-api/Dockerfile
+    volumes:
+      - "./php-api:/usr/src/app"
+      - "./docker/php-api/php-dev.ini:/usr/local/etc/php/conf.d/php.ini"
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+
   database:
     command:
       [

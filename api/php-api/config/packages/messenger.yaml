@@ -1,0 +1,4 @@
+# The only transport is the `scheduler_default` one, created by the Scheduler component
+# and consumed by the `worker` container. Other messages (emails) are handled synchronously.
+framework:
+  messenger: ~

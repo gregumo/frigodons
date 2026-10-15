@@ -44,6 +44,51 @@ abstract class CalendarDateRepository extends ServiceEntityRepository
         );
     }
 
+    /**
+     * @return list<T>
+     */
+    public function findForUserBetween(User $user, \DateTimeImmutable $start, \DateTimeImmutable $end): array
+    {
+        /** @var list<T> */
+        return $this
+            ->createQueryBuilder('d')
+            ->where(sprintf('d.%s = :user', $this->userField()))
+            ->andWhere('d.day BETWEEN :start AND :end')
+            ->setParameter('user', $user)
+            ->setParameter('start', $start->format('Y-m-d'))
+            ->setParameter('end', $end->format('Y-m-d'))
+            ->orderBy('d.day', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Returns the days between the two dates (included) that nobody has booked yet.
+     *
+     * @return list<\DateTimeImmutable>
+     */
+    public function findAvailableDaysBetween(\DateTimeImmutable $start, \DateTimeImmutable $end): array
+    {
+        /** @var list<string> $booked Scalar results are not converted, days are `Y-m-d` strings */
+        $booked = $this
+            ->createQueryBuilder('d')
+            ->select('d.day')
+            ->where('d.day BETWEEN :start AND :end')
+            ->setParameter('start', $start->format('Y-m-d'))
+            ->setParameter('end', $end->format('Y-m-d'))
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        $availableDays = [];
+        for ($day = $start->setTime(0, 0); $day <= $end; $day = $day->modify('+1 day')) {
+            if (!\in_array($day->format('Y-m-d'), $booked, true)) {
+                $availableDays[] = $day;
+            }
+        }
+
+        return $availableDays;
+    }
+
     private function countForUserBetween(User $user, \DateTimeImmutable $start, \DateTimeImmutable $end): int
     {
         return (int) $this

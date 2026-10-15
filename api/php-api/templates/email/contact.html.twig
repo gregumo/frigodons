@@ -1,0 +1,14 @@
+{% extends 'email/_base.html.twig' %}
+
+{% set footer = false %}
+
+{% block content %}
+  <b>Date : </b>{{ 'now'|date('d/m/Y H:i:s') }}<br/>
+  <b>Prénom : </b>{{ contact.firstname }}<br/>
+  <b>Nom : </b>{{ contact.lastname }}<br/>
+  <b>Adresse e-mail : </b>{{ contact.email }}<br/>
+  {% if contact.phone %}
+    <b>Téléphone : </b>{{ contact.phone }}<br/>
+  {% endif %}
+  <b>Message : </b><br/>{{ contact.message|nl2br }}<br/>
+{% endblock %}

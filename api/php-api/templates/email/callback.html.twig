@@ -1,0 +1,26 @@
+{% extends 'email/_base.html.twig' %}
+
+{% block content %}
+  <p>Bonjour {{ user.firstname }},</p>
+
+  <p>
+    Vous avez demandé à être {{ user.gender == 'w' ? 'alertée' : 'alerté' }} pour vos dates de bénévolat.
+    Voici vos dates pour la semaine prochaine :
+  </p>
+
+  {% if cleaningDates is not empty %}
+    {% if user.manager %}
+      <h2>En tant que bénévole</h2>
+    {% endif %}
+    {{ include('email/_days.html.twig', {days: cleaningDates|map(date => date.day)}) }}
+  {% endif %}
+
+  {% if supervisingDates is not empty %}
+    <h2>En tant que responsable</h2>
+    {{ include('email/_days.html.twig', {days: supervisingDates|map(date => date.day)}) }}
+  {% endif %}
+
+  <p class="text-center">
+    <a class="btn" href="{{ app_url }}/calendrier">Voir le calendrier</a>
+  </p>
+{% endblock %}

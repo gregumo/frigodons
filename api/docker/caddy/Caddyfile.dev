@@ -7,6 +7,9 @@ http://localhost {
 
     php_fastcgi * {
       to php-api:9000
+      # Caddy replaces the header by default: forward it as is, Symfony only trusts it
+      # when the request comes from one of the TRUSTED_PROXIES (see framework.yaml).
+      header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
     }
 
     encode gzip

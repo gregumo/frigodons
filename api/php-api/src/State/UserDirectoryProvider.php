@@ -29,7 +29,10 @@ final readonly class UserDirectoryProvider implements ProviderInterface
 
         // Sort with a French collator, so accents are ignored (eg. "Élodie" is sorted with "Elodie").
         $collator = new \Collator('fr_FR');
-        usort($users, static fn(User $a, User $b): int => $collator->compare($a->getFullName(), $b->getFullName()));
+        usort(
+            $users,
+            static fn(User $a, User $b): int => (int) $collator->compare($a->getFullName(), $b->getFullName()),
+        );
 
         return $users;
     }

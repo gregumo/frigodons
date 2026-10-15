@@ -25,6 +25,7 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findOneByEmail(string $email): ?User
     {
+        /** @var User|null */
         return $this
             ->createQueryBuilder('u')
             ->where('LOWER(u.email) = LOWER(:email)')

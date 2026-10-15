@@ -155,6 +155,10 @@ class User implements UserInterface
      */
     public function getUserIdentifier(): string
     {
+        if (null === $this->id) {
+            throw new \LogicException('The user must be persisted to be authenticated.');
+        }
+
         return (string) $this->id;
     }
 

@@ -3,7 +3,7 @@ FROM php:8.4.1-fpm-alpine
 ARG XDEBUG_VERSION=3.4.0
 
 RUN apk add --no-cache --virtual=build $PHPIZE_DEPS icu-dev \
-  && apk add --no-cache postgresql-dev icu-libs zip libzip-dev linux-headers git \
+  && apk add --no-cache postgresql-dev icu-libs icu-data-full zip libzip-dev linux-headers git \
   && pecl install xdebug-$XDEBUG_VERSION \
   && docker-php-ext-configure opcache --enable-opcache \
   && docker-php-ext-install -j$(nproc) intl opcache pdo_pgsql zip \
