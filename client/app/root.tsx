@@ -35,7 +35,7 @@ export async function loader({context, request}: Route.LoaderArgs) {
 
 export function Layout({children}: {children: React.ReactNode}) {
   const data = useRouteLoaderData<typeof loader>('root')
-  // The home page displays a full width flyer.
+  // The home page has full width sections.
   const isHome = useLocation().pathname === '/'
 
   return (

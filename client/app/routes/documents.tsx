@@ -11,7 +11,6 @@ export async function loader({context, request}: Route.LoaderArgs) {
 
   return {
     closetPadlockCode: value('closetPadlockCode'),
-    composterPadlockCode: value('composterPadlockCode'),
   }
 }
 
@@ -41,15 +40,10 @@ export default function Documents({loaderData}: Route.ComponentProps) {
           Télécharger l'engagement moral du bénévole
         </a>
       </p>
-      <h2>Codes des cadenas</h2>
-      <ul>
-        <li>
-          Le code du cadenas du placard est <b>{loaderData.closetPadlockCode}</b>
-        </li>
-        <li>
-          Le code des cadenas des composteurs est <b>{loaderData.composterPadlockCode}</b>
-        </li>
-      </ul>
+      <h2>Code du cadenas</h2>
+      <p>
+        Le code du cadenas du placard est <b>{loaderData.closetPadlockCode}</b>
+      </p>
     </>
   )
 }
