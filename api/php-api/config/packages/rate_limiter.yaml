@@ -1,7 +1,0 @@
-framework:
-  rate_limiter:
-    # Logging in only requires an email: limit attempts to make guessing emails harder.
-    login:
-      policy: sliding_window
-      limit: 10
-      interval: '1 minute'

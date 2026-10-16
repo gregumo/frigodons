@@ -44,11 +44,6 @@ L'API renvoie un JWT (valable 30 jours) à envoyer dans l'en-tête `Authorizatio
 Avec les fixtures, les comptes suivants sont disponibles : `manager1@frigodons.org`, `manager2@frigodons.org`
 et `volunteer1@frigodons.org` à `volunteer10@frigodons.org`.
 
-Pour limiter les essais d'adresses, `/login` accepte 10 tentatives par minute et par IP (429 au-delà).
-Le client étant rendu côté serveur, il transmet l'IP du visiteur dans `X-Forwarded-For` : l'en-tête n'est pris en
-compte que si la requête vient d'une IP listée dans `TRUSTED_PROXIES` (sinon la limite s'applique à l'IP du client SSR).
-En production, il s'agit des [plages d'IP de Cloudflare](https://www.cloudflare.com/ips/), d'où partent les requêtes du Worker.
-
 Pour créer un compte :
 
 ```bash

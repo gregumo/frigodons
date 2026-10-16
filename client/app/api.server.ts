@@ -31,11 +31,6 @@ export function createApi(context: AppLoadContext, request: Request, token: stri
     if (token) {
       headers.set('Authorization', `Bearer ${token}`)
     }
-    // The API limits login attempts by IP: forward the IP of the visitor.
-    const ip = request.headers.get('CF-Connecting-IP')
-    if (ip) {
-      headers.set('X-Forwarded-For', ip)
-    }
     if (body !== undefined) {
       headers.set(
         'Content-Type',
