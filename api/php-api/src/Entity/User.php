@@ -53,7 +53,7 @@ class User implements UserInterface
     public const string WOMAN = 'w';
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column]
     #[Groups(['user:read', 'date:read'])]
     private ?int $id = null;

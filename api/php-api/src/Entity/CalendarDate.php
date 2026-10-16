@@ -23,7 +23,7 @@ abstract class CalendarDate
     public const int CANCELLATION_DELAY_IN_DAYS = 3;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column]
     #[Groups(['date:read'])]
     protected ?int $id = null;
