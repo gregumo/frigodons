@@ -182,10 +182,7 @@ export default function Directory({loaderData}: Route.ComponentProps) {
           isOpen
           onOpenChange={(isOpen) => !isOpen && setSelected(null)}
           footer={
-            <Button
-              onPress={() => setSelected(null)}
-              className={clsx(modalButtonClassName, 'bg-purple-600 hover:bg-purple-700')}
-            >
+            <Button onPress={() => setSelected(null)} className={modalButtonClassName}>
               Fermer
             </Button>
           }

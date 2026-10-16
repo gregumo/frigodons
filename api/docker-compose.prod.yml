@@ -1,6 +1,8 @@
+# The containers are restarted after a reboot of the server.
 services:
   caddy:
     image: frigodons/caddy:${IMAGE_TAG}
+    restart: unless-stopped
     environment:
       - DOMAIN_NAME=${DOMAIN_NAME}
     ports:
@@ -9,18 +11,27 @@ services:
 
   php-api:
     image: frigodons/php-api:${IMAGE_TAG}
+    restart: unless-stopped
     environment:
       - APP_ENV=prod
       - APP_DEBUG=0
 
   worker:
     image: frigodons/php-api:${IMAGE_TAG}
+    restart: unless-stopped
     environment:
       - APP_ENV=prod
       - APP_DEBUG=0
 
+  database:
+    restart: unless-stopped
+    # Only reachable from the server itself, e.g. through an SSH tunnel.
+    ports:
+      - "127.0.0.1:5432:5432"
+
   pg-backup:
     image: frigodons/pg-backup:${IMAGE_TAG}
+    restart: unless-stopped
     environment:
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}

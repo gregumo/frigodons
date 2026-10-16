@@ -1,0 +1,19 @@
+# Copy this file to terraform.tfvars and fill it: it is not versioned, as it contains secrets.
+
+hcloud_token         = ""
+server_name          = ""
+hcloud_s3_region     = "fsn1"
+backup_bucket        = "frigodons-backup"
+hcloud_s3_access_key = ""
+hcloud_s3_secret_key = ""
+
+cloudflare_api_token    = ""
+cloudflare_ci_api_token = ""
+
+github_token = ""
+
+mailer_dsn  = ""
+alert_email = ""
+
+# Switch to true when the old site is switched off (see README.md)
+client_live = false

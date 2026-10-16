@@ -29,7 +29,9 @@ export function Modal({title, isOpen, onOpenChange, children, footer}: Props) {
             </Heading>
           </div>
           <div className="p-6">{children}</div>
-          <div className="flex justify-end gap-1 border-t border-slate-200 p-6">{footer}</div>
+          <div className="flex flex-wrap justify-end gap-3 border-t border-slate-200 p-6">
+            {footer}
+          </div>
         </Dialog>
       </AriaModal>
     </ModalOverlay>
@@ -37,4 +39,10 @@ export function Modal({title, isOpen, onOpenChange, children, footer}: Props) {
 }
 
 export const modalButtonClassName =
-  'inline-flex h-10 items-center rounded px-4 text-xs font-medium uppercase text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg disabled:opacity-60'
+  'inline-flex min-h-12 cursor-pointer items-center justify-center rounded-2xl bg-purple-700 px-6 text-sm font-bold text-white transition-colors hover:bg-black disabled:opacity-60'
+
+/**
+ * For the secondary action of a modal, next to a primary one (eg. "Retour" next to "Confirmer").
+ */
+export const modalSecondaryButtonClassName =
+  'inline-flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border-2 border-black bg-white px-6 text-sm font-bold text-black transition-colors hover:bg-black hover:text-white disabled:opacity-60'

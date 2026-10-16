@@ -11,6 +11,9 @@ Ce site permet aux bénévoles de La Cordée de s'organiser pour l'entretenir ch
 - [`client/`](client/README.md) : le site, une application React Router 7 rendue côté serveur sur Cloudflare
   Workers, avec React Aria Components et Tailwind CSS. Il est servi sur `frigodons.org`.
 
+- [`infra/`](infra/README.md) : l'infrastructure de production (serveur Hetzner, Cloudflare, secrets GitHub), décrite
+  avec Terraform.
+
 Chaque partie est déployée par sa CI GitHub Actions (`.github/workflows/api.yml` et `client.yml`)
 à chaque push sur `main`.
 

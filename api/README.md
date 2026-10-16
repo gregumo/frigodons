@@ -107,4 +107,6 @@ Le déploiement est fait par la CI GitHub Actions (`.github/workflows/api.yml`) 
 les images sont construites, chargées sur le serveur puis `deploy.sh` démarre un nouveau conteneur `php-api`,
 exécute les migrations et arrête l'ancien conteneur. Les autres services (dont le `worker`) sont ensuite recréés.
 
-Le serveur doit contenir un fichier `.env` avec les variables de `.env.dist` (et `COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml`).
+Le fichier `.env` du serveur (`/root/.env`, avec `COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml`) est écrit
+par Terraform, voir [`infra/`](../infra/README.md). Après un changement de ce fichier, il faut redéployer l'API
+(ou lancer `docker compose up -d` sur le serveur).

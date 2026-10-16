@@ -91,7 +91,7 @@ export function SubmitButton({children, isPending}: {children: ReactNode; isPend
     <Button
       type="submit"
       isPending={isPending}
-      className="mt-4 mb-2 block w-full rounded-2xl bg-purple py-2 font-semibold text-white transition duration-300 ease hover:bg-purple-600 data-[pending]:opacity-60"
+      className="mt-4 mb-2 block min-h-12 w-full cursor-pointer rounded-2xl bg-purple-700 px-7 font-bold text-white transition-colors hover:bg-black data-[pending]:opacity-60"
     >
       {children}
     </Button>

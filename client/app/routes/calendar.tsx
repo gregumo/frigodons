@@ -1,10 +1,9 @@
 import clsx from 'clsx'
 import {useEffect, useState} from 'react'
-import {Button} from 'react-aria-components'
+import {Button, ToggleButton} from 'react-aria-components'
 import {data, Link, useFetcher} from 'react-router'
 import {ApiError, requireApi} from '~/api.server'
-import {Alert} from '~/components/Form'
-import {Modal, modalButtonClassName} from '~/components/Modal'
+import {Modal, modalButtonClassName, modalSecondaryButtonClassName} from '~/components/Modal'
 import {Participation} from '~/components/Participation'
 import {formatDay, formatMonth, monthViewDays, today} from '~/dates'
 import type {
@@ -27,6 +26,13 @@ const RESOURCES: Record<DateContext, {path: string; userField: 'cleaner' | 'supe
 }
 
 type ApiDate = Omit<CalendarDate, 'user'> & {cleaner?: DateUser; supervisor?: DateUser}
+
+/**
+ * A day selected on the calendar, to be booked (`add`) or cancelled (`delete`) once validated.
+ */
+type Selected = {dateContext: DateContext; day: string; intent: 'add' | 'delete'; id?: number}
+
+type Failure = {dateContext: DateContext; day: string; message: string}
 
 export async function loader({context, request, params}: Route.LoaderArgs) {
   const {api} = await requireApi(context, request)
@@ -70,31 +76,48 @@ export async function loader({context, request, params}: Route.LoaderArgs) {
   return {today: now, year, month, days, me, cleaningDates, supervisingDates, participation, stats}
 }
 
+/**
+ * Books and cancels all the selected days. Each day is handled on its own, so a day booked by someone
+ * else in the meantime does not prevent the other ones from being saved.
+ */
 export async function action({context, request}: Route.ActionArgs) {
   const {api} = await requireApi(context, request)
   const formData = await request.formData()
-  const {path} = RESOURCES[formData.get('context') === 'supervising' ? 'supervising' : 'cleaning']
+  const selection = JSON.parse(String(formData.get('selection') ?? '[]')) as Selected[]
 
-  try {
-    if (formData.get('intent') === 'delete') {
-      await api.delete(`${path}/${Number(formData.get('id'))}`)
-    } else {
-      await api.post(path, {day: String(formData.get('day'))})
+  let booked = 0
+  let cancelled = 0
+  const failures: Failure[] = []
+
+  // Cancellations first, so a day can be cancelled as a volunteer and booked as a manager at once.
+  const sorted = [...selection].sort(
+    (a, b) => Number(a.intent === 'add') - Number(b.intent === 'add'),
+  )
+  for (const {dateContext, day, intent, id} of sorted) {
+    const {path} = RESOURCES[dateContext === 'supervising' ? 'supervising' : 'cleaning']
+    try {
+      if (intent === 'delete') {
+        await api.delete(`${path}/${Number(id)}`)
+        cancelled++
+      } else {
+        await api.post(path, {day: String(day)})
+        booked++
+      }
+    } catch (error) {
+      if (!(error instanceof ApiError)) {
+        throw error
+      }
+      failures.push({dateContext, day, message: error.violations[0]?.message ?? error.message})
     }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      return {ok: false, error: error.violations[0]?.message ?? error.message}
-    }
-    throw error
   }
 
-  return {ok: true, error: null}
+  return {booked, cancelled, failures}
 }
 
 /**
  * What happens when clicking on a day:
- * - add: the day is free and can be booked;
- * - delete: the day is booked by the user, who can cancel it;
+ * - add: the day is free and can be selected to be booked;
+ * - delete: the day is booked by the user, who can select it to cancel it;
  * - unauthorized_delete: the day is booked by the user, but it is too late to cancel it;
  * - contact: the day is booked by someone else, whose contact details are displayed;
  * - blank: volunteers cannot book supervising days.
@@ -131,26 +154,71 @@ function getCell(
   return {dateContext, day, date, mode: 'add', clickable: day >= now}
 }
 
+const isSelectable = (cell: Cell) =>
+  cell.clickable && (cell.mode === 'add' || cell.mode === 'delete')
+
+const selectionKey = (dateContext: DateContext, day: string) => `${dateContext}:${day}`
+
+function dayLabel({dateContext, day}: {dateContext: DateContext; day: string}) {
+  return `${formatDay(day)}${dateContext === 'supervising' ? ' (responsable)' : ''}`
+}
+
+function plural(count: number, singular: string, pluralForm: string) {
+  return `${count} ${count > 1 ? pluralForm : singular}`
+}
+
 function UserName({user}: {user: DateUser}) {
   return (
     <>
-      <span className="hidden md:inline-block">
+      <span className="hidden md:inline">
         {user.firstname} {user.lastname}
       </span>
-      <span className="inline-block md:hidden">
+      <span className="md:hidden">
         {user.firstname} {user.lastname.charAt(0)}.
       </span>
     </>
   )
 }
 
+const focusClassName =
+  'cursor-pointer data-[focus-visible]:ring-2 data-[focus-visible]:ring-purple-700'
+
+/**
+ * Selected days have a dashed outline, the others none (the focus is shown with a ring).
+ */
+function outlineClassName(selected: Selected | undefined) {
+  return selected ? 'outline-2 -outline-offset-4 outline-black outline-dashed' : 'outline-none'
+}
+
+/**
+ * Displayed instead of the name on a day selected to be booked: a check on small screens.
+ */
+function ToBook() {
+  return (
+    <>
+      <b className="hidden md:inline">À réserver</b>
+      <svg className="m-auto size-5 md:hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M5 12.5l4.5 4.5L19 7.5"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </>
+  )
+}
+
 function CellButton({
   cell,
+  selected,
   onSelect,
   className,
   children,
 }: {
   cell: Cell
+  selected: Selected | undefined
   onSelect: (cell: Cell) => void
   className: string
   children: React.ReactNode
@@ -163,14 +231,24 @@ function CellButton({
     return <div className={className}>{children}</div>
   }
 
+  if (isSelectable(cell)) {
+    return (
+      <ToggleButton
+        isSelected={selected !== undefined}
+        onChange={() => onSelect(cell)}
+        aria-label={`${label}, ${cell.mode === 'add' ? 'à réserver' : 'à annuler'}`}
+        className={clsx(className, focusClassName, outlineClassName(selected))}
+      >
+        {children}
+      </ToggleButton>
+    )
+  }
+
   return (
     <Button
       onPress={() => onSelect(cell)}
       aria-label={label}
-      className={clsx(
-        className,
-        'cursor-pointer outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-purple-700',
-      )}
+      className={clsx(className, focusClassName, outlineClassName(undefined))}
     >
       {children}
     </Button>
@@ -179,12 +257,14 @@ function CellButton({
 
 function CleaningCell({
   cell,
+  selected,
   me,
   month,
   isToday,
   onSelect,
 }: {
   cell: Cell
+  selected: Selected | undefined
   me: User
   month: number
   isToday: boolean
@@ -196,7 +276,11 @@ function CleaningCell({
   const booked = mode === 'delete' || mode === 'unauthorized_delete' || mode === 'contact'
 
   let background = ''
-  if (mode === 'delete' || mode === 'unauthorized_delete') {
+  if (selected?.intent === 'add') {
+    background = 'bg-yellow'
+  } else if (selected?.intent === 'delete') {
+    background = 'bg-purple-200'
+  } else if (mode === 'delete' || mode === 'unauthorized_delete') {
     background = clickable ? 'bg-purple hover:bg-purple-600' : 'bg-purple-200'
   } else if (mode === 'contact') {
     if (mustBeTrained) {
@@ -220,14 +304,21 @@ function CleaningCell({
     >
       <CellButton
         cell={cell}
+        selected={selected}
         onSelect={onSelect}
         className="flex h-20 w-full flex-col overflow-hidden p-1 text-center"
       >
-        <span className={clsx('h-5 w-full', booked ? 'text-white' : 'text-gray-500')}>
+        <span className={clsx('h-5 w-full', booked && !selected ? 'text-white' : 'text-gray-500')}>
           {Number(day.slice(8, 10))}
         </span>
-        <span className="mt-3 w-full grow text-xs text-white md:p-1 md:text-sm">
-          {date && <UserName user={date.user} />}
+        <span
+          className={clsx(
+            'mt-3 w-full grow text-xs md:p-1 md:text-sm',
+            selected ? 'text-black' : 'text-white',
+            selected?.intent === 'delete' && 'line-through',
+          )}
+        >
+          {selected?.intent === 'add' ? <ToBook /> : date && <UserName user={date.user} />}
         </span>
       </CellButton>
       {mustBeTrained && (
@@ -244,110 +335,97 @@ function CleaningCell({
 
 function SupervisingCell({
   cell,
+  selected,
   isToday,
   onSelect,
 }: {
   cell: Cell
+  selected: Selected | undefined
   isToday: boolean
   onSelect: (cell: Cell) => void
 }) {
   return (
     <td
       className={clsx(
-        'h-10 bg-stone-300 p-0',
-        cell.clickable && 'hover:bg-gray-300',
+        'h-10 p-0',
+        selected?.intent === 'add' ? 'bg-yellow' : 'bg-stone-300',
+        cell.clickable && !selected && 'hover:bg-gray-300',
         isToday ? 'border-2 border-t-0 border-[crimson]' : 'border border-gray-200',
       )}
     >
       <CellButton
         cell={cell}
+        selected={selected}
         onSelect={onSelect}
         className={clsx(
           'flex h-10 w-full items-center justify-center overflow-hidden p-1 text-xs lg:text-sm',
           cell.clickable ? 'text-black' : 'text-black-200',
+          selected?.intent === 'delete' && 'line-through',
         )}
       >
-        {cell.date && <UserName user={cell.date.user} />}
+        {selected?.intent === 'add' ? <ToBook /> : cell.date && <UserName user={cell.date.user} />}
       </CellButton>
     </td>
   )
 }
 
 /**
- * The modal displayed when clicking on a day, to book it, cancel it or contact the person who booked it.
+ * The modal displayed when clicking on a day that cannot be selected: to contact the person who
+ * booked it, or to explain why it cannot be cancelled.
  */
-function DateModal({cell, onClose}: {cell: Cell; onClose: () => void}) {
-  const fetcher = useFetcher<typeof action>()
-  const isSubmitting = fetcher.state !== 'idle'
+function DetailsModal({cell, onClose}: {cell: Cell; onClose: () => void}) {
   const supervising = cell.dateContext === 'supervising'
   const date = formatDay(cell.day).toLowerCase()
-
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data?.ok) {
-      onClose()
-    }
-  }, [fetcher.state, fetcher.data])
+  const user = cell.date?.user as DateUser
 
   let title: string
   let content: React.ReactNode
-  let closeText = 'Fermer'
-  let submitText: string | null = null
 
-  switch (cell.mode) {
-    case 'add':
-      title = supervising ? 'Réserver la date en tant que responsable ?' : 'Réserver la date ?'
-      content = `La date du ${date} est disponible, souhaitez-vous la réserver ?`
-      closeText = 'Annuler'
-      submitText = 'Confirmer'
-      break
-    case 'delete':
-      title = supervising ? 'Annuler la date en tant que responsable ?' : 'Annuler la date ?'
-      content = `La date du ${date} est réservée à votre nom, souhaitez-vous annuler votre participation ?`
-      closeText = 'Non'
-      submitText = 'Confirmer'
-      break
-    case 'unauthorized_delete':
-      title = 'Annulation impossible'
-      content = `La date du ${date} est réservée à votre nom. Vous ne pouvez pas annuler votre participation moins de 3 jours avant la date. Si besoin, n'hésitez pas à prendre contact avec le responsable de cette journée.`
-      break
-    default: {
-      const user = cell.date?.user as DateUser
-      const man = user.gender === 'm'
-      const role = supervising ? 'responsable' : 'bénévole'
-      title = `Contacter ${man ? 'le' : 'la'} ${role}`
-      content = (
-        <>
-          <p>
-            {man ? 'Le' : 'La'} {role} du {date} est{' '}
-            <b>
-              {user.firstname} {user.lastname}
-            </b>
-            .
-          </p>
-          <p>Vous pouvez {man ? 'le' : 'la'} contacter :</p>
-          <ul className="list-disc">
-            {user.phone && (
-              <li>
-                par téléphone au{' '}
-                <b>
-                  <a href={`tel:${user.phone}`} className="link">
-                    {user.phone}
-                  </a>
-                </b>
-              </li>
-            )}
+  if (cell.mode === 'unauthorized_delete') {
+    title = 'Annulation impossible'
+    content = (
+      <p>
+        La date du {date} est réservée à votre nom. Vous ne pouvez pas annuler votre participation
+        moins de 3 jours avant la date. Si besoin, n'hésitez pas à prendre contact avec le
+        responsable de cette journée.
+      </p>
+    )
+  } else {
+    const man = user.gender === 'm'
+    const role = supervising ? 'responsable' : 'bénévole'
+    title = `Contacter ${man ? 'le' : 'la'} ${role}`
+    content = (
+      <>
+        <p>
+          {man ? 'Le' : 'La'} {role} du {date} est{' '}
+          <b>
+            {user.firstname} {user.lastname}
+          </b>
+          .
+        </p>
+        <p>Vous pouvez {man ? 'le' : 'la'} contacter :</p>
+        <ul className="list-disc">
+          {user.phone && (
             <li>
-              par mail à l'adresse{' '}
+              par téléphone au{' '}
               <b>
-                <a href={`mailto:${user.email}`} className="link">
-                  {user.email}
+                <a href={`tel:${user.phone}`} className="link">
+                  {user.phone}
                 </a>
               </b>
             </li>
-          </ul>
-        </>
-      )
-    }
+          )}
+          <li>
+            par mail à l'adresse{' '}
+            <b>
+              <a href={`mailto:${user.email}`} className="link">
+                {user.email}
+              </a>
+            </b>
+          </li>
+        </ul>
+      </>
+    )
   }
 
   return (
@@ -356,36 +434,166 @@ function DateModal({cell, onClose}: {cell: Cell; onClose: () => void}) {
       isOpen
       onOpenChange={(isOpen) => !isOpen && onClose()}
       footer={
+        <Button onPress={onClose} className={modalButtonClassName}>
+          Fermer
+        </Button>
+      }
+    >
+      {content}
+    </Modal>
+  )
+}
+
+function DayList({title, days}: {title: string; days: {dateContext: DateContext; day: string}[]}) {
+  if (days.length === 0) {
+    return null
+  }
+
+  return (
+    <>
+      <p className="mt-3 font-bold first:mt-0">{title}</p>
+      <ul className="list-disc">
+        {days.map((day) => (
+          <li key={selectionKey(day.dateContext, day.day)}>{dayLabel(day)}</li>
+        ))}
+      </ul>
+    </>
+  )
+}
+
+/**
+ * Confirms the selected days, then displays what could not be saved, if anything.
+ */
+function ConfirmModal({
+  selection,
+  onCancel,
+  onDone,
+}: {
+  selection: Selected[]
+  onCancel: () => void
+  onDone: () => void
+}) {
+  const fetcher = useFetcher<typeof action>()
+  const isSubmitting = fetcher.state !== 'idle'
+  const result = fetcher.state === 'idle' ? fetcher.data : undefined
+
+  useEffect(() => {
+    if (result && result.failures.length === 0) {
+      onDone()
+    }
+  }, [result])
+
+  if (result) {
+    const saved = [
+      result.booked > 0 && plural(result.booked, 'date réservée', 'dates réservées'),
+      result.cancelled > 0 && plural(result.cancelled, 'date annulée', 'dates annulées'),
+    ].filter(Boolean)
+
+    return (
+      <Modal
+        title="Certaines dates n'ont pas pu être enregistrées"
+        isOpen
+        onOpenChange={(isOpen) => !isOpen && onDone()}
+        footer={
+          <Button onPress={onDone} className={modalButtonClassName}>
+            Fermer
+          </Button>
+        }
+      >
+        {saved.length > 0 && <p className="mb-3">{saved.join(' et ')}.</p>}
+        <ul className="list-disc">
+          {result.failures.map((failure) => (
+            <li key={selectionKey(failure.dateContext, failure.day)}>
+              {dayLabel(failure)} : {failure.message}
+            </li>
+          ))}
+        </ul>
+      </Modal>
+    )
+  }
+
+  const sorted = [...selection].sort((a, b) => a.day.localeCompare(b.day))
+
+  return (
+    <Modal
+      title="Valider vos choix ?"
+      isOpen
+      onOpenChange={(isOpen) => !isOpen && !isSubmitting && onCancel()}
+      footer={
         <>
           <Button
-            onPress={onClose}
+            onPress={onCancel}
             isDisabled={isSubmitting}
-            className={clsx(modalButtonClassName, 'bg-purple-600 hover:bg-purple-700')}
+            className={modalSecondaryButtonClassName}
           >
-            {closeText}
+            Retour
           </Button>
-          {submitText && (
-            <Button
-              type="submit"
-              form="date-form"
-              isPending={isSubmitting}
-              className={clsx(modalButtonClassName, 'bg-blue-600 hover:bg-blue-700')}
-            >
-              {submitText}
-            </Button>
-          )}
+          <Button
+            type="submit"
+            form="selection-form"
+            isPending={isSubmitting}
+            className={modalButtonClassName}
+          >
+            Confirmer
+          </Button>
         </>
       }
     >
-      {fetcher.data?.error && <Alert type="error">{fetcher.data.error}</Alert>}
-      {typeof content === 'string' ? <p>{content}</p> : content}
-      <fetcher.Form method="post" id="date-form">
-        <input type="hidden" name="intent" value={cell.mode} />
-        <input type="hidden" name="context" value={cell.dateContext} />
-        <input type="hidden" name="day" value={cell.day} />
-        <input type="hidden" name="id" value={cell.date?.id ?? ''} />
+      <DayList title="Vous allez réserver :" days={sorted.filter((s) => s.intent === 'add')} />
+      <DayList title="Vous allez annuler :" days={sorted.filter((s) => s.intent === 'delete')} />
+      <fetcher.Form method="post" id="selection-form">
+        <input type="hidden" name="selection" value={JSON.stringify(selection)} />
       </fetcher.Form>
     </Modal>
+  )
+}
+
+/**
+ * Stays at the bottom of the screen while days are selected.
+ */
+function SelectionBar({
+  selection,
+  onClear,
+  onValidate,
+}: {
+  selection: Selected[]
+  onClear: () => void
+  onValidate: () => void
+}) {
+  const toBook = selection.filter((s) => s.intent === 'add').length
+  const toCancel = selection.length - toBook
+  const summary = [
+    toBook > 0 && plural(toBook, 'date à réserver', 'dates à réserver'),
+    toCancel > 0 && `${toCancel} à annuler`,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+
+  return (
+    <section
+      aria-label="Dates sélectionnées"
+      className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-black bg-cream shadow-lg"
+    >
+      <div className="container mx-auto flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+        <p className="font-bold" aria-live="polite">
+          {summary}
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button
+            onPress={onClear}
+            className="min-h-11 cursor-pointer rounded-2xl border-2 border-black px-5 text-sm font-bold transition-colors hover:bg-black hover:text-cream"
+          >
+            Tout désélectionner
+          </Button>
+          <Button
+            onPress={onValidate}
+            className="min-h-11 cursor-pointer rounded-2xl bg-purple-600 px-6 text-sm font-bold text-white transition-colors hover:bg-purple-700"
+          >
+            Valider
+          </Button>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -404,10 +612,7 @@ function HelpModal({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       footer={
-        <Button
-          onPress={() => onOpenChange(false)}
-          className={clsx(modalButtonClassName, 'bg-purple-600 hover:bg-purple-700')}
-        >
+        <Button onPress={() => onOpenChange(false)} className={modalButtonClassName}>
           Fermer
         </Button>
       }
@@ -415,10 +620,11 @@ function HelpModal({
       <h2>Combien de jours participer ?</h2>
       <p>Vous participez autant de jours que vous le souhaitez.</p>
       {children}
-      <h2>Comment réserver/annuler une date ?</h2>
+      <h2>Comment réserver/annuler des dates ?</h2>
       <p>
-        Pour réserver ou annuler une date, il suffit simplement de cliquer dessus sur le calendrier,
-        puis de confirmer votre choix.
+        Cliquez sur les jours libres que vous souhaitez réserver, ou sur vos dates pour les annuler.
+        Vous pouvez en sélectionner plusieurs, y compris sur plusieurs mois. Cliquez ensuite sur «
+        Valider » en bas de l'écran, puis confirmez votre choix.
       </p>
       <h2>Quelques conditions pour modifier les dates</h2>
       <ul className="list-disc">
@@ -452,8 +658,34 @@ export default function Calendar({loaderData}: Route.ComponentProps) {
     participation,
     stats,
   } = loaderData
-  const [selected, setSelected] = useState<Cell | null>(null)
+  // Kept when changing month (the route stays mounted), so days of several months can be booked at once.
+  const [selection, setSelection] = useState<Record<string, Selected>>({})
+  const [details, setDetails] = useState<Cell | null>(null)
+  const [isConfirmOpen, setConfirmOpen] = useState(false)
   const [isHelpOpen, setHelpOpen] = useState(false)
+  const selected = Object.values(selection)
+
+  const onSelect = (cell: Cell) => {
+    if (!isSelectable(cell)) {
+      setDetails(cell)
+      return
+    }
+
+    const key = selectionKey(cell.dateContext, cell.day)
+    setSelection(({[key]: current, ...others}) =>
+      current
+        ? others
+        : {
+            ...others,
+            [key]: {
+              dateContext: cell.dateContext,
+              day: cell.day,
+              intent: cell.mode === 'add' ? 'add' : 'delete',
+              id: cell.date?.id,
+            },
+          },
+    )
+  }
 
   const weeks: string[][] = []
   for (let i = 0; i < days.length; i += 7) {
@@ -461,7 +693,7 @@ export default function Calendar({loaderData}: Route.ComponentProps) {
   }
 
   return (
-    <>
+    <div className={clsx(selected.length > 0 && 'pb-28 md:pb-20')}>
       <h1>Planning des bénévoles</h1>
 
       <div className="md:flex md:flex-row md:space-x-10">
@@ -523,18 +755,36 @@ export default function Calendar({loaderData}: Route.ComponentProps) {
                 month={month}
                 cleaningDates={cleaningDates}
                 supervisingDates={supervisingDates}
-                onSelect={setSelected}
+                selection={selection}
+                onSelect={onSelect}
               />
             ))}
           </tbody>
         </table>
       </div>
 
-      {selected && (
-        <DateModal
-          key={`${selected.dateContext}-${selected.day}`}
-          cell={selected}
-          onClose={() => setSelected(null)}
+      {selected.length > 0 && (
+        <SelectionBar
+          selection={selected}
+          onClear={() => setSelection({})}
+          onValidate={() => setConfirmOpen(true)}
+        />
+      )}
+      {isConfirmOpen && (
+        <ConfirmModal
+          selection={selected}
+          onCancel={() => setConfirmOpen(false)}
+          onDone={() => {
+            setConfirmOpen(false)
+            setSelection({})
+          }}
+        />
+      )}
+      {details && (
+        <DetailsModal
+          key={`${details.dateContext}-${details.day}`}
+          cell={details}
+          onClose={() => setDetails(null)}
         />
       )}
       <HelpModal isOpen={isHelpOpen} onOpenChange={setHelpOpen}>
@@ -546,7 +796,7 @@ export default function Calendar({loaderData}: Route.ComponentProps) {
           withHeadings={false}
         />
       </HelpModal>
-    </>
+    </div>
   )
 }
 
@@ -557,6 +807,7 @@ function WeekRows({
   month,
   cleaningDates,
   supervisingDates,
+  selection,
   onSelect,
 }: {
   week: string[]
@@ -565,6 +816,7 @@ function WeekRows({
   month: number
   cleaningDates: Record<string, CalendarDate>
   supervisingDates: Record<string, CalendarDate>
+  selection: Record<string, Selected>
   onSelect: (cell: Cell) => void
 }) {
   return (
@@ -574,6 +826,7 @@ function WeekRows({
           <CleaningCell
             key={day}
             cell={getCell('cleaning', day, cleaningDates[day], me, now)}
+            selected={selection[selectionKey('cleaning', day)]}
             me={me}
             month={month}
             isToday={day === now}
@@ -586,6 +839,7 @@ function WeekRows({
           <SupervisingCell
             key={day}
             cell={getCell('supervising', day, supervisingDates[day], me, now)}
+            selected={selection[selectionKey('supervising', day)]}
             isToday={day === now}
             onSelect={onSelect}
           />

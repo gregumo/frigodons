@@ -11,7 +11,7 @@ export const meta = () => [
 ]
 
 const buttonClassName =
-  'inline-flex min-h-12 items-center justify-center rounded-full px-7 font-bold transition-colors'
+  'inline-flex min-h-12 items-center justify-center rounded-2xl px-7 font-bold transition-colors'
 
 function Check({children}: {children: ReactNode}) {
   return (
@@ -116,17 +116,11 @@ export default function Home() {
             </Link>
             <Link
               to="/connexion"
-              className={`${buttonClassName} border-2 border-black hover:bg-black hover:text-cream`}
+              className={`${buttonClassName} bg-purple-700 text-white hover:bg-black`}
             >
               Déjà bénévole ? Se connecter
             </Link>
           </div>
-          <p className="mt-8">
-            Une question ?{' '}
-            <a href="mailto:lacordee44@protonmail.com" className="font-bold underline">
-              lacordee44@protonmail.com
-            </a>
-          </p>
           <p className="mt-4 text-sm italic">Un projet du groupe habitants La Cordée</p>
         </div>
       </section>
