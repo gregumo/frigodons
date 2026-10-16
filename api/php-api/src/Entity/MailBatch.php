@@ -18,7 +18,7 @@ class MailBatch
     public const string TYPE_MISSING_VOLUNTEER = 'missing_volunteer';
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column]
     private ?int $id = null;
 
