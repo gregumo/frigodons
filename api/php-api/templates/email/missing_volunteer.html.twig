@@ -1,0 +1,30 @@
+{% extends 'email/_base.html.twig' %}
+
+{% set header_color = '#EDCE71' %}
+{% set header_border_color = '#E0C269' %}
+{% set button_text_color = '#725E25' %}
+
+{% block content %}
+  <p>Bonjour {{ user.firstname }},</p>
+
+  <p>
+    Vous avez demandé à être {{ user.gender == 'w' ? 'alertée' : 'alerté' }} lorsqu'il manque des bénévoles.
+    Voici les dates toujours disponibles dans les 2 semaines à venir :
+  </p>
+
+  {% if cleaningAvailableDays is not empty %}
+    {% if user.manager %}
+      <h2>{{ cleaningAvailableDays|length > 1 ? 'Dates de bénévole encore libres' : 'Date de bénévole encore libre' }}</h2>
+    {% endif %}
+    {{ include('email/_days.html.twig', {days: cleaningAvailableDays}) }}
+  {% endif %}
+
+  {% if user.manager and supervisingAvailableDays is not empty %}
+    <h2>{{ supervisingAvailableDays|length > 1 ? 'Dates de responsable encore libres' : 'Date de responsable encore libre' }}</h2>
+    {{ include('email/_days.html.twig', {days: supervisingAvailableDays}) }}
+  {% endif %}
+
+  <p class="text-center">
+    <a class="btn" href="{{ app_url }}/calendrier">Voir le calendrier</a>
+  </p>
+{% endblock %}

@@ -1,0 +1,36 @@
+parameters:
+  env(ALERT_EMAIL): ""
+  env(ALTCHA_HMAC_KEY): ""
+  env(APP_SECRET): ""
+  env(APP_URL): ""
+  env(CORS_ALLOW_ORIGIN): ""
+  env(DATABASE_URL): ""
+  env(JWT_SECRET): ""
+  env(MAILER_DSN): "null://null"
+  env(MAILER_FROM): ""
+  env(MAILER_FROM_NAME): ""
+  env(MAILER_REPLY_TO): ""
+  env(MAILER_REPLY_TO_NAME): ""
+  env(TRUSTED_PROXIES): ""
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    bind:
+      $alertEmail: '%env(ALERT_EMAIL)%'
+      $altchaHmacKey: '%env(ALTCHA_HMAC_KEY)%'
+
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/Kernel.php'
+      - '../src/Entity/'
+      - '../src/ApiResource/'
+
+  App\Mail\EmailFactory:
+    arguments:
+      $from: '%env(MAILER_FROM)%'
+      $fromName: '%env(MAILER_FROM_NAME)%'
+      $replyTo: '%env(MAILER_REPLY_TO)%'
+      $replyToName: '%env(MAILER_REPLY_TO_NAME)%'

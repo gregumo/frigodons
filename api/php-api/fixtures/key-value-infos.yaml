@@ -1,0 +1,4 @@
+App\Entity\KeyValueInfo:
+  closet_padlock_code:
+    key: 'closetPadlockCode'
+    value: '1234'

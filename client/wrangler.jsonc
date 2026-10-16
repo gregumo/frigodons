@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "frigodons",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./workers/app.ts",
+  "secrets": {
+    "required": ["SESSION_SECRET"]
+  },
+  "vars": {
+    "API_URL": "https://api.frigodons.org"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true
+    }
+  }
+}

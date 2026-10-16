@@ -1,0 +1,13 @@
+# Contains the tokens and passwords
+terraform/terraform.tfvars
+
+# The state contains every secret in plain text: it is kept outside of git (see README.md)
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/.terraform.tfstate.lock.info
+
+# A saved plan (`terraform plan -out`) contains the values of the variables, so the tokens
+terraform/*.tfplan
+
+# Providers downloaded by `terraform init`
+terraform/.terraform/

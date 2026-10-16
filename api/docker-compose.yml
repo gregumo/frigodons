@@ -1,0 +1,47 @@
+x-php-api-environment: &php-api-environment
+  - CORS_ALLOW_ORIGIN=${APP_URL}
+  - APP_SECRET=${APP_SECRET}
+  - JWT_SECRET=${JWT_SECRET}
+  - APP_URL=${APP_URL}
+  - DATABASE_URL=postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+  - MAILER_DSN=${MAILER_DSN}
+  - MAILER_FROM=${MAILER_FROM}
+  - MAILER_FROM_NAME=${MAILER_FROM_NAME}
+  - MAILER_REPLY_TO=${MAILER_REPLY_TO}
+  - MAILER_REPLY_TO_NAME=${MAILER_REPLY_TO_NAME}
+  - ALERT_EMAIL=${ALERT_EMAIL}
+  - ALTCHA_HMAC_KEY=${ALTCHA_HMAC_KEY}
+  - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+
+services:
+  caddy:
+    depends_on:
+      - php-api
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    volumes:
+      - caddy_data:/data
+
+  php-api:
+    environment: *php-api-environment
+
+  # Runs the recurring tasks (see src/Schedule.php)
+  worker:
+    depends_on:
+      - database
+    environment: *php-api-environment
+    command: ["php", "bin/console", "messenger:consume", "scheduler_default", "--time-limit=3600"]
+    restart: unless-stopped
+
+  database:
+    image: postgres:18.3
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - database_data:/var/lib/postgresql
+
+volumes:
+  caddy_data:
+  database_data:

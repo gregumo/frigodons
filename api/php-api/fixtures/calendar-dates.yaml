@@ -1,0 +1,13 @@
+App\Entity\CleaningDate:
+  cleaning_date{1..25}:
+    day: '<(new \DateTimeImmutable(sprintf("today %+d days", $current * 2 - 25)))>'
+    user: '@volunteer*'
+
+  cleaning_date_manager:
+    day: '<(new \DateTimeImmutable("today +30 days"))>'
+    user: '@manager1'
+
+App\Entity\SupervisingDate:
+  supervising_date{1..12}:
+    day: '<(new \DateTimeImmutable(sprintf("today %+d days", $current * 4 - 24)))>'
+    user: '@manager*'

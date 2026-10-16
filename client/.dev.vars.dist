@@ -1,0 +1,3 @@
+# Local overrides of the Worker variables (copy to .dev.vars)
+API_URL=http://localhost:61100
+SESSION_SECRET=ThisSessionSecretIsNotSecretAndShouldBeChanged

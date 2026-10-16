@@ -1,0 +1,20 @@
+services:
+  caddy:
+    image: ghcr.io/gregumo/frigodons-caddy:${IMAGE_TAG}
+
+  php-api:
+    image: ghcr.io/gregumo/frigodons-php-api:${IMAGE_TAG}
+    volumes:
+      - "./docker/php-api/php-dev.ini:/usr/local/etc/php/conf.d/php.ini"
+    environment:
+      APP_ENV: test
+      APP_DEBUG: 1
+      MAILER_DSN: null://null
+      TEST_DATABASE_URL: postgresql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${TEST_DATABASE_NAME}
+
+  worker:
+    image: ghcr.io/gregumo/frigodons-php-api:${IMAGE_TAG}
+    environment:
+      APP_ENV: test
+      APP_DEBUG: 1
+      MAILER_DSN: null://null

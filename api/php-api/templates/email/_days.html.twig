@@ -1,0 +1,5 @@
+<ul>
+  {% for day in days %}
+    <li>{{ day|format_date(pattern: 'EEEE d MMMM y', locale: 'fr')|capitalize }}</li>
+  {% endfor %}
+</ul>
