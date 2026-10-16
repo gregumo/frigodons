@@ -17,6 +17,8 @@ services:
   caddy:
     depends_on:
       - php-api
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
     volumes:
       - caddy_data:/data
 

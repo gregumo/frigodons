@@ -3,8 +3,6 @@ services:
   caddy:
     image: frigodons/caddy:${IMAGE_TAG}
     restart: unless-stopped
-    environment:
-      - DOMAIN_NAME=${DOMAIN_NAME}
     ports:
       - "80:80"
       - "443:443"
