@@ -99,13 +99,6 @@ export default function Volunteer({loaderData}: Route.ComponentProps) {
           </p>
         </Column>
       </div>
-
-      <div className="mt-16 text-right text-xs text-black-200 italic">
-        <p>
-          Merci à IconScout pour le{' '}
-          <a href="https://iconscout.com/icon-pack/teamwork-3">pack d'icônes Teamwork</a>
-        </p>
-      </div>
     </>
   )
 }
