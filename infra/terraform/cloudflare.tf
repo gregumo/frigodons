@@ -12,9 +12,6 @@ locals {
   cloudflare_account_id = data.cloudflare_zone.main.account.id
 }
 
-# The IP addresses of the Cloudflare network, trusted by the API to read the IP of visitors (TRUSTED_PROXIES).
-data "cloudflare_ip_ranges" "main" {}
-
 /*
  * api.frigodons.org points to the server. It is not proxied by Cloudflare: Caddy gets its own certificate.
  */

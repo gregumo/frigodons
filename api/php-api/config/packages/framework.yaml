@@ -4,9 +4,6 @@ framework:
     log: true
   http_method_override: false
   handle_all_throwables: true
-  # The client is rendered server side, it forwards the IP of the visitor in the X-Forwarded-For header.
-  trusted_proxies: '%env(TRUSTED_PROXIES)%'
-  trusted_headers: ['x-forwarded-for']
 
 when@test:
   framework:

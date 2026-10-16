@@ -93,8 +93,6 @@ locals {
     JWT_SECRET=${random_password.jwt_secret.result}
     APP_URL=https://${var.domain}
     ALTCHA_HMAC_KEY=${random_password.altcha_hmac_key.result}
-    # The requests of the Worker come from the Cloudflare network
-    TRUSTED_PROXIES=${join(",", concat(data.cloudflare_ip_ranges.main.ipv4_cidrs, data.cloudflare_ip_ranges.main.ipv6_cidrs))}
 
     DATABASE_HOST=database
     DATABASE_PORT=5432

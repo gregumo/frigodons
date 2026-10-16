@@ -25,7 +25,6 @@
     "symfony/monolog-bundle": "^4.0",
     "symfony/property-access": "8.*",
     "symfony/property-info": "8.*",
-    "symfony/rate-limiter": "8.*",
     "symfony/runtime": "8.*",
     "symfony/scheduler": "8.*",
     "symfony/security-bundle": "8.*",
