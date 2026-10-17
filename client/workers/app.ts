@@ -16,10 +16,12 @@ const requestHandler = createRequestHandler(
 
 export default {
   fetch(request, env, ctx) {
-    // www.frigodons.org is also attached to the Worker (see infra/terraform/cloudflare.tf): redirect to frigodons.org.
+    // Redirect to HTTPS, and www.frigodons.org (also attached to the Worker, see infra/terraform/cloudflare.tf) to
+    // frigodons.org. Not in development, which is served over HTTP.
     const url = new URL(request.url)
-    if (url.hostname.startsWith('www.')) {
-      url.hostname = url.hostname.slice('www.'.length)
+    if (import.meta.env.PROD && (url.protocol === 'http:' || url.hostname.startsWith('www.'))) {
+      url.protocol = 'https:'
+      url.hostname = url.hostname.replace(/^www\./, '')
       return Response.redirect(url.toString(), 301)
     }
 
