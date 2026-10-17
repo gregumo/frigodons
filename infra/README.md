@@ -59,7 +59,7 @@ Les secrets de l'application (`APP_SECRET`, `JWT_SECRET`, mot de passe de la bas
 | `cloudflare_api_token` | Cloudflare → Mon profil → Tokens API : Zone (Lecture), DNS (Modification), Routes Workers (Modification), et Scripts Workers (Modification) sur le compte |
 | `cloudflare_ci_api_token` | Le token créé avec le modèle « Edit Cloudflare Workers », pour la CI |
 | `github_token` | GitHub → Settings → Developer settings → Fine-grained tokens : dépôt `frigodons`, permission « Secrets » en lecture et écriture |
-| `mailer_dsn` | Le serveur SMTP qui envoie les mails, ex. `smtp://utilisateur:motdepasse@smtp.exemple.org:587` |
+| `mailer_dsn` | Le serveur SMTP qui envoie les mails, ex. `smtp://utilisateur:motdepasse@smtp.exemple.org:587`. Les caractères spéciaux de l'utilisateur et du mot de passe doivent être encodés (`@` → `%40`, `#` → `%23`, `?` → `%3F`, `/` → `%2F`, `:` → `%3A`) |
 | `alert_email` | L'adresse qui reçoit les alertes si une tâche planifiée échoue |
 
 ## Utilisation
