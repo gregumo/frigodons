@@ -81,7 +81,7 @@ variable "github_repository" {
 // API
 
 variable "mailer_dsn" {
-  description = "SMTP server used to send the emails, eg. smtp://user:password@smtp.example.org:587"
+  description = "SMTP server used to send the emails, eg. smtp://user:password@smtp.example.org:587 (special characters of the user and password must be URL-encoded, eg. @ as %40)"
   type        = string
   sensitive   = true
 }

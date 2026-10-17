@@ -57,3 +57,14 @@ resource "cloudflare_workers_custom_domain" "client" {
   hostname   = var.domain
   service    = cloudflare_worker.client.name
 }
+
+# The Worker redirects www.frigodons.org to frigodons.org (see client/workers/app.ts).
+resource "cloudflare_workers_custom_domain" "client_www" {
+  count = var.client_live ? 1 : 0
+
+  account_id = local.cloudflare_account_id
+  zone_id    = data.cloudflare_zone.main.id
+  zone_name  = data.cloudflare_zone.main.name
+  hostname   = "www.${var.domain}"
+  service    = cloudflare_worker.client.name
+}
