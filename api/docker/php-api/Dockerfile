@@ -1,4 +1,4 @@
-FROM php:8.4.1-fpm-alpine
+FROM php:8.4.27-fpm-alpine
 
 ARG XDEBUG_VERSION=3.4.0
 
