@@ -58,13 +58,48 @@ resource "cloudflare_workers_custom_domain" "client" {
   service    = cloudflare_worker.client.name
 }
 
-# The Worker redirects www.frigodons.org to frigodons.org (see client/workers/app.ts).
-resource "cloudflare_workers_custom_domain" "client_www" {
+/*
+ * www.frigodons.org is redirected to frigodons.org by Cloudflare, before reaching the Worker. The DNS record only needs
+ * to exist and be proxied for Cloudflare to receive the requests: 100:: is a placeholder address, never contacted.
+ */
+resource "cloudflare_dns_record" "www" {
   count = var.client_live ? 1 : 0
 
-  account_id = local.cloudflare_account_id
+  zone_id = data.cloudflare_zone.main.id
+  name    = "www.${var.domain}"
+  type    = "AAAA"
+  content = "100::"
+  proxied = true
+  ttl     = 1 # Automatic
+}
+
+resource "cloudflare_ruleset" "redirects" {
+  count = var.client_live ? 1 : 0
+
+  zone_id = data.cloudflare_zone.main.id
+  name    = "Redirects"
+  kind    = "zone"
+  phase   = "http_request_dynamic_redirect"
+
+  rules = [{
+    description = "www.${var.domain} to ${var.domain}"
+    expression  = "(http.host eq \"www.${var.domain}\")"
+    action      = "redirect"
+    action_parameters = {
+      from_value = {
+        status_code           = 301
+        preserve_query_string = true
+        target_url = {
+          expression = "concat(\"https://${var.domain}\", http.request.uri.path)"
+        }
+      }
+    }
+  }]
+}
+
+# Redirects http:// to https:// on the whole zone. api.frigodons.org is not proxied, so Caddy still handles it.
+resource "cloudflare_zone_setting" "always_use_https" {
   zone_id    = data.cloudflare_zone.main.id
-  zone_name  = data.cloudflare_zone.main.name
-  hostname   = "www.${var.domain}"
-  service    = cloudflare_worker.client.name
+  setting_id = "always_use_https"
+  value      = "on"
 }
